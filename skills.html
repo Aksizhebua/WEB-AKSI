@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Skills | Aksi Sabar Zebua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .shape-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: #93c5fd;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: #d8b4fe;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            top: 40%;
+            left: 40%;
+            width: 30vw;
+            height: 30vw;
+            background: #86efac;
+            border-radius: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--dark-navy);
+            font-weight: 800;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        section {
+            padding: 120px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+
+        .nav-links a.active {
+            color: #6366f1;
+        }
+
+        .content-card {
+            padding: 40px;
+        }
+
+        /* Modern Skills Design */
+        .skills-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skills-intro {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 0 20px;
+        }
+
+        .skills-intro p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Skill Categories */
+        .skill-categories {
+            display: grid;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .skill-category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--primary-gradient);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 80px rgba(31, 38, 135, 0.2);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .icon-professional {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .icon-creative {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .icon-technical {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .icon-soft {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .category-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .category-subtitle {
+            color: var(--text-gray);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Individual Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-item {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .skill-name {
+            font-weight: 700;
+            color: var(--dark-navy);
+            font-size: 1.1rem;
+        }
+
+        .skill-level {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .level-expert {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .level-advanced {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+        }
+
+        .level-intermediate {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .level-beginner {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        /* Progress Bar */
+        .skill-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            transition: width 2s ease-in-out;
+            animation: fillProgress 2s ease-in-out;
+        }
+
+        @keyframes fillProgress {
+            0% { width: 0%; }
+        }
+
+        .skill-description {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Tools & Software Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 3rem;
+        }
+
+        .tool-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(31, 38, 135, 0.15);
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            background: var(--primary-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .tool-name {
+            font-weight: 700;
+            color: var(--dark-navy);
+            margin-bottom: 8px;
+        }
+
+        .tool-usage {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+        }
+
+        /* Achievement Badges */
+        .achievements {
+            margin-top: 4rem;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            transition: var(--transition);
+        }
+
+        .achievement-badge:hover {
+            transform: scale(1.02);
+        }
+
+        .badge-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            background: var(--primary-gradient);
+        }
+
+        .badge-info h4 {
+            font-weight: 700;
+            color: var(--dark-navy);
+            margin-bottom: 3px;
+        }
+
+        .badge-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .generic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Scroll Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            nav {
+                width: 95%;
+                padding: 15px;
+                border-radius: 20px;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .skill-category {
+                padding: 25px;
+            }
+
+            .category-title {
+                font-size: 1.5rem;
+            }
+            
+            .skills-intro p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .achievements-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .skill-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <nav class="glass-panel">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="experience.html">Experience</a>
+            <a href="skills.html" class="active">Skills</a>
+            <a href="education.html">Education</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <section id="skills">
+        <div class="container reveal">
+            <div class="skills-container">
+                <h2 class="section-title" data-en="Skills &amp; Expertise" data-id="Keahlian &amp; Kompetensi">Skills &amp; Expertise</h2>
+                
+                <div class="skills-intro">
+                    <p data-en="A comprehensive overview of my professional capabilities, technical proficiencies, and creative talents developed through education, experience, and continuous learning." data-id="Gambaran komprehensif kemampuan profesional, kecakapan teknis, dan bakat kreatif saya yang dikembangkan melalui pendidikan, pengalaman, dan pembelajaran berkelanjutan.">A comprehensive overview of my professional capabilities, technical proficiencies, and creative talents developed through education, experience, and continuous learning.</p>
+                </div>
+
+                <!-- Professional Skills -->
+                <div class="skill-categories">
+                    <div class="skill-category reveal">
+                        <div class="category-header">
+                            <div class="category-icon icon-professional">💼</div>
+                            <div>
+                                <h3 class="category-title" data-en="Professional Skills" data-id="Keahlian Profesional">Professional Skills</h3>
+                                <p class="category-subtitle" data-en="Core competencies in operational excellence and education" data-id="Kompetensi inti dalam keunggulan operasional dan pendidikan">Core competencies in operational excellence and education</p>
+                            </div>
+                        </div>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Event Management" data-id="Manajemen Event">Event Management</span>
+                                    <span class="skill-level level-expert">Expert</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 95%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Comprehensive event planning, coordination, and execution across multiple organizational levels" data-id="Perencanaan, koordinasi, dan pelaksanaan event yang komprehensif di berbagai tingkat organisasi">Comprehensive event planning, coordination, and execution across multiple organizational levels</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Teaching &amp; Training" data-id="Mengajar &amp; Pelatihan">Teaching &amp; Training</span>
+                                    <span class="skill-level level-advanced">Advanced</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 90%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Literacy, numeracy instruction and educational program development for diverse learners" data-id="Pengajaran literasi, numerasi, dan pengembangan program pendidikan untuk berbagai jenis peserta didik">Literacy, numeracy instruction and educational program development for diverse learners</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Operational Excellence" data-id="Keunggulan Operasional">Operational Excellence</span>
+                                    <span class="skill-level level-expert">Expert</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 92%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Process optimization, workflow management, and operational efficiency enhancement" data-id="Optimasi proses, manajemen alur kerja, dan peningkatan efisiensi operasional">Process optimization, workflow management, and operational efficiency enhancement</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Project Coordination" data-id="Koordinasi Proyek">Project Coordination</span>
+                                    <span class="skill-level level-advanced">Advanced</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 88%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Cross-functional team leadership and multi-stakeholder project delivery" data-id="Kepemimpinan tim lintas fungsi dan penyampaian proyek multi-pemangku kepentingan">Cross-functional team leadership and multi-stakeholder project delivery</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Creative Skills -->
+                    <div class="skill-category reveal">
+                        <div class="category-header">
+                            <div class="category-icon icon-creative">🎨</div>
+                            <div>
+                                <h3 class="category-title" data-en="Creative Skills" data-id="Keahlian Kreatif">Creative Skills</h3>
+                                <p class="category-subtitle" data-en="Artistic and design capabilities for enhanced communication" data-id="Kemampuan artistik dan desain untuk komunikasi yang lebih efektif">Artistic and design capabilities for enhanced communication</p>
+                            </div>
+                        </div>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Graphic Design" data-id="Desain Grafis">Graphic Design</span>
+                                    <span class="skill-level level-advanced">Advanced</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 85%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Visual communication, branding, and digital design for marketing materials" data-id="Komunikasi visual, branding, dan desain digital untuk materi pemasaran">Visual communication, branding, and digital design for marketing materials</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Music Instruction" data-id="Pengajaran Musik">Music Instruction</span>
+                                    <span class="skill-level level-expert">Expert</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 90%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Acoustic guitar teaching with personalized instruction methods" data-id="Pengajaran gitar akustik dengan metode instruksi yang dipersonalisasi">Acoustic guitar teaching with personalized instruction methods</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Content Creation" data-id="Pembuatan Konten">Content Creation</span>
+                                    <span class="skill-level level-intermediate">Intermediate</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Visual storytelling and engaging content for various media platforms" data-id="Penceritaan visual dan konten menarik untuk berbagai platform media">Visual storytelling and engaging content for various media platforms</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Skills -->
+                    <div class="skill-category reveal">
+                        <div class="category-header">
+                            <div class="category-icon icon-technical">⚙️</div>
+                            <div>
+                                <h3 class="category-title" data-en="Technical Proficiency" data-id="Kemampuan Teknis">Technical Proficiency</h3>
+                                <p class="category-subtitle" data-en="Digital tools and software for productivity and design" data-id="Alat digital dan perangkat lunak untuk produktivitas dan desain">Digital tools and software for productivity and design</p>
+                            </div>
+                        </div>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name">Microsoft Office Suite</span>
+                                    <span class="skill-level level-expert">Expert</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 95%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Advanced proficiency in Word, Excel, PowerPoint for professional documentation" data-id="Kecakapan tinggi dalam Word, Excel, PowerPoint untuk dokumentasi profesional">Advanced proficiency in Word, Excel, PowerPoint for professional documentation</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name">Google Workspace</span>
+                                    <span class="skill-level level-advanced">Advanced</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 88%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Collaborative productivity tools for team coordination and document sharing" data-id="Alat produktivitas kolaboratif untuk koordinasi tim dan berbagi dokumen">Collaborative productivity tools for team coordination and document sharing</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name">Design Software</span>
+                                    <span class="skill-level level-intermediate">Intermediate</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 78%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Canva, basic Adobe Creative Suite for graphic design and visual content" data-id="Canva, Adobe Creative Suite dasar untuk desain grafis dan konten visual">Canva, basic Adobe Creative Suite for graphic design and visual content</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Soft Skills -->
+                    <div class="skill-category reveal">
+                        <div class="category-header">
+                            <div class="category-icon icon-soft">🤝</div>
+                            <div>
+                                <h3 class="category-title" data-en="Interpersonal Skills" data-id="Keterampilan Interpersonal">Interpersonal Skills</h3>
+                                <p class="category-subtitle" data-en="Communication and leadership capabilities for team success" data-id="Kemampuan komunikasi dan kepemimpinan untuk kesuksesan tim">Communication and leadership capabilities for team success</p>
+                            </div>
+                        </div>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Communication" data-id="Komunikasi">Communication</span>
+                                    <span class="skill-level level-expert">Expert</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 93%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Clear verbal and written communication across diverse audiences and contexts" data-id="Komunikasi lisan dan tulisan yang jelas kepada berbagai audiens dan konteks">Clear verbal and written communication across diverse audiences and contexts</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Leadership" data-id="Kepemimpinan">Leadership</span>
+                                    <span class="skill-level level-advanced">Advanced</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 87%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Team motivation, delegating responsibilities, and fostering collaborative environments" data-id="Motivasi tim, pendelegasian tanggung jawab, dan membangun lingkungan kolaboratif">Team motivation, delegating responsibilities, and fostering collaborative environments</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Problem Solving" data-id="Pemecahan Masalah">Problem Solving</span>
+                                    <span class="skill-level level-advanced">Advanced</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 85%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Analytical thinking and creative solutions for complex operational challenges" data-id="Pemikiran analitis dan solusi kreatif untuk tantangan operasional yang kompleks">Analytical thinking and creative solutions for complex operational challenges</p>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-header">
+                                    <span class="skill-name" data-en="Adaptability" data-id="Adaptabilitas">Adaptability</span>
+                                    <span class="skill-level level-expert">Expert</span>
+                                </div>
+                                <div class="skill-progress">
+                                    <div class="progress-fill" style="width: 90%;"></div>
+                                </div>
+                                <p class="skill-description" data-en="Flexibility in dynamic environments and rapid learning of new skills" data-id="Fleksibilitas dalam lingkungan dinamis dan pembelajaran cepat keterampilan baru">Flexibility in dynamic environments and rapid learning of new skills</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools & Software -->
+                <div class="achievements reveal">
+                    <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem; background: var(--primary-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-en="Tools &amp; Technologies" data-id="Alat &amp; Teknologi">Tools &amp; Technologies</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <div class="tool-icon">📊</div>
+                            <h4 class="tool-name">Excel</h4>
+                            <p class="tool-usage" data-en="Data Analysis" data-id="Analisis Data">Data Analysis</p>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">📝</div>
+                            <h4 class="tool-name">Word</h4>
+                            <p class="tool-usage" data-en="Documentation" data-id="Dokumentasi">Documentation</p>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">📈</div>
+                            <h4 class="tool-name">PowerPoint</h4>
+                            <p class="tool-usage" data-en="Presentations" data-id="Presentasi">Presentations</p>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">🎨</div>
+                            <h4 class="tool-name">Canva</h4>
+                            <p class="tool-usage" data-en="Design" data-id="Desain">Design</p>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">☁️</div>
+                            <h4 class="tool-name">Google Drive</h4>
+                            <p class="tool-usage" data-en="Collaboration" data-id="Kolaborasi">Collaboration</p>
+                        </div>
+                        <div class="tool-card">
+                            <div class="tool-icon">🎵</div>
+                            <h4 class="tool-name">Music Apps</h4>
+                            <p class="tool-usage" data-en="Teaching Aid" data-id="Alat Mengajar">Teaching Aid</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievement Badges -->
+                <div class="achievements reveal">
+                    <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem; background: var(--primary-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-en="Key Achievements" data-id="Pencapaian Utama">Key Achievements</h3>
+                    <div class="achievements-grid">
+                        <div class="achievement-badge">
+                            <div class="badge-icon">🏆</div>
+                            <div class="badge-info">
+                                <h4 data-en="Event Excellence" data-id="Keunggulan Event">Event Excellence</h4>
+                                <p data-en="Successfully managed 15+ institutional events" data-id="Berhasil mengelola 15+ acara institusional">Successfully managed 15+ institutional events</p>
+                            </div>
+                        </div>
+                        <div class="achievement-badge">
+                            <div class="badge-icon">🎓</div>
+                            <div class="badge-info">
+                                <h4 data-en="Educational Impact" data-id="Dampak Pendidikan">Educational Impact</h4>
+                                <p data-en="Taught 100+ students across various programs" data-id="Mengajar 100+ siswa dalam berbagai program">Taught 100+ students across various programs</p>
+                            </div>
+                        </div>
+                        <div class="achievement-badge">
+                            <div class="badge-icon">👥</div>
+                            <div class="badge-info">
+                                <h4 data-en="Team Leadership" data-id="Kepemimpinan Tim">Team Leadership</h4>
+                                <p data-en="Led multiple committees and organizations" data-id="Memimpin berbagai komite dan organisasi">Led multiple committees and organizations</p>
+                            </div>
+                        </div>
+                        <div class="achievement-badge">
+                            <div class="badge-icon">⭐</div>
+                            <div class="badge-info">
+                                <h4 data-en="Excellence Recognition" data-id="Pengakuan Prestasi">Excellence Recognition</h4>
+                                <p data-en="Consistent performance across all roles" data-id="Kinerja konsisten di semua peran">Consistent performance across all roles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth reveal animation on scroll
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+    <script src="lang.js"></script>
+</body>
+</html>

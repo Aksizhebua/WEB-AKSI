@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>About Me | Aksi Sabar Zebua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .shape-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: #93c5fd;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: #d8b4fe;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            top: 40%;
+            left: 40%;
+            width: 30vw;
+            height: 30vw;
+            background: #86efac;
+            border-radius: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--dark-navy);
+            font-weight: 800;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        section {
+            padding: 120px 20px 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+
+        .nav-links a.active {
+            color: #6366f1;
+        }
+
+        .content-card {
+            padding: 40px;
+        }
+
+        /* Biography Section */
+        .biography-section {
+            display: grid;
+            gap: 3rem;
+            align-items: center;
+            margin: 4rem 0;
+        }
+
+        /* Biography with photo on left */
+        .biography-left {
+            grid-template-columns: 1fr 3fr;
+        }
+
+        /* Biography with photo on right */
+        .biography-right {
+            grid-template-columns: 3fr 1fr;
+        }
+
+        .biography-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .biography-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-navy);
+        }
+
+        .biography-content p {
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        /* Scroll Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            nav {
+                width: 95%;
+                padding: 15px;
+                border-radius: 20px;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .biography-section {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .biography-content h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <nav class="glass-panel">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="experience.html">Experience</a>
+            <a href="skills.html">Skills</a>
+            <a href="education.html">Education</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <section id="about">
+        <div class="container reveal">
+            <div style="width: 100%;">
+                <h2 class="section-title" data-en="About Me" data-id="Tentang Saya">About Me</h2>
+                <div class="content-card glass-panel">
+                    <p style="font-size: 1.1rem; text-align: center; max-width: 800px; margin: 0 auto;" data-en="I am a graduate of Primary School Education (PGSD) from Atma Jaya Catholic University of Indonesia. Throughout my career, I have cultivated a strong foundation in event management, operational support, and education. Currently, I work with PT Atma Jaya Mitra Nusantara in operational and event support roles, where I ensure smooth logistics and successful execution of varied events.<br><br>My background in education drives my passion for teaching literacy and numeracy to elementary school students. Outside of standard academics, I am highly creative—I teach acoustic guitar privately and utilize graphic design skills to enhance communication and engagement in all my projects." data-id="Saya adalah lulusan Pendidikan Guru Sekolah Dasar (PGSD) dari Universitas Katolik Indonesia Atma Jaya. Sepanjang karier saya, saya telah membangun fondasi yang kuat dalam manajemen acara, dukungan operasional, dan pendidikan. Saat ini, saya bekerja di PT Atma Jaya Mitra Nusantara dalam peran dukungan operasional dan acara, di mana saya memastikan logistik yang lancar dan pelaksanaan berbagai acara yang sukses.<br><br>Latar belakang pendidikan saya mendorong semangat mengajar literasi dan numerasi kepada siswa sekolah dasar. Di luar akademis, saya sangat kreatif—saya mengajar gitar akustik secara privat dan memanfaatkan keterampilan desain grafis untuk meningkatkan komunikasi dan keterlibatan dalam semua proyek saya.">
+                        I am a graduate of Primary School Education (PGSD) from Atma Jaya Catholic University of Indonesia. Throughout my career, I have cultivated a strong foundation in event management, operational support, and education. Currently, I work with PT Atma Jaya Mitra Nusantara in operational and event support roles, where I ensure smooth logistics and successful execution of varied events.
+                        <br><br>
+                        My background in education drives my passion for teaching literacy and numeracy to elementary school students. Outside of standard academics, I am highly creative—I teach acoustic guitar privately and utilize graphic design skills to enhance communication and engagement in all my projects.
+                    </p>
+                </div>
+
+                <!-- Biography Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-left">
+                        <img src="https://i.imgur.com/Yngi9j4.jpg" alt="Tanjungmorawa Coastline" class="biography-image">
+                        <div class="biography-content" id="bio-content-1">
+                            <h3>Born in 2002</h3>
+                            <p>I was born into a modest family in an area called Kalangan, Pandan District, Central Tapanuli Regency, North Sumatra. I was born on Saturday, December 14, 2002.</p>
+                            
+                            <p>According to my parents' story, when the day of my birth arrived, we were still living in the house of Mr. Talu Gadang—a figure who was very close to our family. He patiently watched over my mother and taught my father how to calm her down before the delivery process.</p>
+                            
+                            <p>Interestingly, on that day, Mr. Talu Gadang said, “It seems like today is not the day,” and then he went fishing alone. However, it was on that very day that I was born. Although he felt a little upset that he was not there when I was born, he never regretted it. As a sign of respect, his name was immortalized in my name, “Saba Ati,” which is part of my full name.</p>
+                            
+                            <p>Originally, my name was Sabar Zebua. However, Uncle Sa'a (his name is Ama Popi) later added the name “Aksi” in front of my name. Since then, I have been known as Aksi Sabar Zebua—a name that holds family stories, togetherness, and deep meaning.                        </div>
+                    </div>
+                </div>
+
+                <!-- Childhood Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-right">
+                        <div class="biography-content" id="bio-content-2">
+                            <h3>Elementary school years 2009-2015</h3>
+                            <p>In 2005, our family moved to Muara Sibuntuon, a village quite far from the city center. At that time, the surrounding environment was still very natural—full of trees and forests. Initially, we lived in the house of Bou, my father's older brother. Soon after, we rented a house located right in front of Bou's house.</p>
+                            
+                            <p>Some time later, my father bought a plot of land by the river and built a simple house there. That's how we began to settle independently in the village.</p>
+                            
+                            <p>In 2008, when I was six years old, I started elementary school at SD Negeri 155688 Muara Sibuntuon. When I started school, I was not a smart child, especially when it came to reading. I was not yet fluent in reading at the beginning of elementary school. However, I excelled in mathematics. Somehow, even though my reading skills were still limited, I was able to move up a grade every year—albeit with mediocre grades.</p>
+                           
+                            <p>A major change occurred when I was in fourth grade. My homeroom teacher at the time, Ms. Rida, was known for being strict and fierce. However, it was from her that I learned a lot. She taught me to read using memorization and intensive practice. Thanks to her guidance, by the first semester of fourth grade, I was finally able to read fluently. From then on, my grades began to improve rapidly—from being at the bottom of the class, I managed to break into the top 10.</p>
+                            
+                            <p>In fifth grade, I was able to achieve a ranking in the top 5. Then in sixth grade, I managed to become number 1 until I graduated. Many people couldn't believe my transformation, considering I wasn't an outstanding student at first. However, through this experience, I learned that passion, perseverance, and a desire to learn can overcome initial limitations. I graduated from elementary school with very satisfactory grades, and that became one of the important milestones in my life journey.</p>
+                        </div>
+                        <img src="images/aksi2.png" alt="Elementary School" class="biography-image">
+                    </div>
+                </div>
+
+                <!-- Elementary School Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-left">
+                        <img src="images/aksismp.png" alt="Junior High School" class="biography-image">
+                        <div class="biography-content" id="bio-content-3">
+                            <h3>Junior High School Period 2015-2018</h3>
+                            <p>After graduating from elementary school, I continued my education at Sibabangun 4 Public Junior High School, formerly known as Sibabangun 1 Atap Junior High School. The school changed its name just as I entered 7th grade. The junior high school was located in the same area as my former elementary school—just in a different building. The school was relatively new, and I was part of its fifth batch of students since its establishment.</p>
+                            
+                            <p>My junior high school years were a very enjoyable time for me, although they were not without challenges. When I was in 7th grade, I took the plunge and ran for class president. It turned out that many of my friends trusted me with their votes, and I was elected. I was very happy at that time because I was able to learn how to lead and manage my classmates, while also establishing good cooperation with them.</p>
+                            
+                            <p>I was also often entrusted to replace the student council president in leading the morning assembly at school. Although I was sometimes teased because I couldn't pronounce the letter “R” correctly, I wasn't embarrassed. Instead, I used it as motivation to continue learning and remain confident. Many teachers considered me a good leader.</p>
+                            
+                            <p>In 8th grade, I was re-elected as class president. I always tried to create a comfortable classroom atmosphere for both teachers and friends. Academically, I consistently ranked in the top 5, which was a source of pride for me. In the same year, I also participated in the Central Tapanuli Regency Mathematics Science Olympiad and won 3rd place—a very meaningful achievement for me at that time.</p>
+                            
+                            <p>In 9th grade, I took on a new challenge by running for student council president. Although I was not elected, I have no regrets, because I had the courage to try. I remained active in assisting the Student Council President in various activities, working closely with Ms. Dhian, the Vice Principal for Student Affairs. From this experience, I learned a lot about leadership and responsibility.</p>
+                        
+                            <p>Finally, I completed junior high school with a joyful heart and satisfactory academic results. This period became an important foundation in building my confidence and enthusiasm to continue developing.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Junior High School Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-right">
+                        <div class="biography-content" id="bio-content-4">
+                            <h3> The Beginning of the Journey to Bekasi (2018)</h3>
+                            <p> The year 2018 was a challenging year for me and my family. At that time, continuing my education to the next level felt very difficult due to financial constraints. There were many considerations within the family. I had decided not to continue my studies and was ready to start working to ease my parents' burden.</p>
+                            
+                            <p>However, my parents did not approve of this decision. Every day, they prayed that God would provide a way out before I actually graduated. Then one day, my parents remembered that Uncle Sa'a's child was studying in Jakarta. That's when they came up with the idea of visiting Uncle Sa'a and asking if it would be possible for me to continue my studies there.</p>
+                            
+                            <p>Upon arriving at Uncle Sa'a's place, he advised me to register at the Sinar Kasih Harapan Orphanage, located in Mustika Jaya, Bekasi City. After going through the administrative process and honestly explaining my family situation, I was finally accepted.</p>
+                            
+                            <p>This decision led me on a new journey—moving to Bekasi City, a place I had never been to before. It was very far from my hometown, and this was the first time I had to live away from my parents. Despite this, with a strong determination to continue my education, I was ready to face any challenges that came my way for the sake of my future.</p>
+                        </div>
+                        <img src="images/tobekasi.png" alt="Journey to Bekasi" class="biography-image">
+                    </div>
+                </div>
+
+                <!-- High School Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-left">
+                        <img src="images/aksismk.png" alt="Vocational School" class="biography-image">
+                        <div class="biography-content" id="bio-content-5">
+                            <h3>Vocational School Period 2018-2021</h3>
+                            <p>During my high school years, I lived at Yayasan Sinar Kasih Harapan, where I learned many important values such as discipline, responsibility, and perseverance. Living in the foundation environment shaped my character and taught me the importance of community, support, and personal growth.</p>
+                            
+                            <p>At the same time, I pursued my formal education at SMK Yayasan Tinta Emas Indonesia (YATINDO). During this period, I faced various challenges that helped me grow both academically and personally. Being part of both the foundation and the school environment allowed me to develop independence and a strong work ethic from an early age.</p>
+                            
+                            <p>Outside the classroom, I began to explore my interests in creativity and music. I developed my guitar skills and often shared my knowledge with others around me. This experience gradually built my confidence in teaching and communicating with people.</p>
+                            
+                            <p>These formative years played an important role in shaping my perspective about education, creativity, and service to others. The experiences I gained during this time later inspired me to pursue higher education in the field of teaching and to continue developing skills in creativity, organization, and leadership.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- University Beginnings Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-right">
+                        <div class="biography-content" id="bio-content-6">
+                            <h3>University Years 2021-2025</h3>
+                            <p>My university journey began when I was accepted into Universitas Katolik Indonesia Atma Jaya, where I pursued a Bachelor's degree in Primary School Education (PGSD). During my studies, I developed a deeper understanding of education, particularly in literacy and numeracy for elementary school students.
+
+While studying at the university, I actively looked for opportunities to grow beyond academics. I became involved in various activities, including supporting events, creative projects, and organizational work. These experiences helped me develop practical skills such as event coordination, teamwork, and operational management.</p>
+                            
+                            <p>University life also taught me resilience and independence. Balancing academic responsibilities with work and personal development required discipline and determination. Through these experiences, I learned how to manage time effectively and continuously improve myself.
+
+Outside the classroom, I continued to develop my creative interests, especially in music and design. Teaching acoustic guitar privately and participating in creative projects helped me strengthen my communication skills and build meaningful connections with others.</p>
+                            
+                            
+                            <p>In 2025, I successfully graduated from Universitas Katolik Indonesia Atma Jaya. One of the most meaningful moments of my journey was when my parents came to Jakarta to attend my graduation. After the ceremony, I had the opportunity to take them around the city and show them Jakarta — a moment that meant a lot to me as a way of expressing my gratitude for their support throughout my journey.</p>
+                        </div>
+                        <img src="images/wisuda.jpeg" alt="University Graduation" class="biography-image">
+                    </div>
+                </div>
+
+                <!-- Future Aspirations Section -->
+                <div class="content-card glass-panel" style="margin-top: 3rem;">
+                    <div class="biography-section biography-left">
+                        <img src="images/masadepan.png" alt="Future Vision" class="biography-image">
+                        <div class="biography-content" id="bio-content-7">
+                            <h3>Future Vision 2026 & Beyond</h3>
+                            <p>Looking ahead, my goal is to continue growing as a professional in Operational Excellence, Event Management, and Creative Coordination. I aim to develop stronger skills in improving operational systems, managing impactful events, and supporting organizations in creating well-structured and meaningful experiences.</p>
+                            
+                            <p>In the coming years, I want to expand my expertise by learning more about process improvement, project coordination, and creative management, while continuing to contribute to teams and organizations that value collaboration, innovation, and efficiency.</p>
+                            
+                            <p>Beyond professional growth, I also hope to keep developing my creative interests, particularly in music and design, as these passions help me stay balanced, inspired, and connected with others.</p>
+                            
+                            <p>Looking further into the future, my vision is to build a career where I can combine operational excellence, creativity, and leadership to create positive impact in every project and community I am part of.</p>
+                        </div>                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth reveal animation on scroll
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+    <script src="lang.js"></script>
+</body>
+</html>

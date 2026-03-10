@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Education | Aksi Sabar Zebua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .shape-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: #93c5fd;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: #d8b4fe;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            top: 40%;
+            left: 40%;
+            width: 30vw;
+            height: 30vw;
+            background: #86efac;
+            border-radius: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--dark-navy);
+            font-weight: 800;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        section {
+            padding: 120px 20px 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+
+        .nav-links a.active {
+            color: #6366f1;
+        }
+
+        .content-card {
+            padding: 40px;
+        }
+
+        /* Education Timeline Design */
+        .education-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .education-intro {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 0 20px;
+        }
+
+        .education-intro p {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Timeline Structure */
+        .education-timeline {
+            position: relative;
+            margin: 4rem 0;
+        }
+
+        .timeline-line {
+            display: none;
+        }
+
+        .education-item {
+            position: relative;
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .timeline-marker {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            z-index: 10;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3); }
+            50% { box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5); }
+            100% { box-shadow: 0 8px 32px rgba(31, 38, 135, 0.3); }
+        }
+
+        .education-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .education-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .education-content:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 80px rgba(31, 38, 135, 0.2);
+        }
+
+        .education-level {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .level-university {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .level-vocational {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .level-junior {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .level-elementary {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .education-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .education-institution {
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .education-duration {
+            color: var(--text-gray);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .education-description {
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .achievements-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .achievements-list li {
+            position: relative;
+            padding: 8px 0 8px 30px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .achievements-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            font-size: 16px;
+            color: #6366f1;
+        }
+
+        /* Stats Section */
+        .education-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        /* Certifications/Awards */
+        .certifications {
+            margin-top: 4rem;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .cert-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(31, 38, 135, 0.15);
+        }
+
+        .cert-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .cert-title {
+            font-weight: 700;
+            color: var(--dark-navy);
+            margin-bottom: 10px;
+        }
+
+        .cert-description {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Scroll Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            nav {
+                width: 95%;
+                padding: 15px;
+                border-radius: 20px;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .timeline-line {
+                display: none;
+            }
+
+            .education-item {
+                grid-template-columns: auto 1fr;
+                gap: 2rem;
+                text-align: left !important;
+            }
+
+            .education-item:nth-child(even) .education-content,
+            .education-item:nth-child(odd) .education-content {
+                order: 2;
+                text-align: left;
+            }
+
+            .timeline-marker {
+                order: 1;
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .education-stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .education-title {
+                font-size: 1.5rem;
+            }
+
+            .education-intro p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .education-content {
+                padding: 25px;
+            }
+            
+            .cert-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .education-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <nav class="glass-panel">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="experience.html">Experience</a>
+            <a href="skills.html">Skills</a>
+            <a href="education.html" class="active">Education</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <section id="education">
+        <div class="container reveal">
+            <div class="education-container">
+                <h2 class="section-title" data-en="Educational Journey" data-id="Perjalanan Pendidikan">Educational Journey</h2>
+                
+                <div class="education-intro">
+                    <p data-en="From humble beginnings in North Sumatra to earning a university degree in Jakarta, my educational journey reflects perseverance, growth, and the transformative power of learning." data-id="Dari awal yang sederhana di Sumatera Utara hingga meraih gelar universitas di Jakarta, perjalanan pendidikan saya mencerminkan ketekunan, pertumbuhan, dan kekuatan transformatif dari belajar.">From humble beginnings in North Sumatra to earning a university degree in Jakarta, my educational journey reflects perseverance, growth, and the transformative power of learning.</p>
+                </div>
+
+                <!-- Education Statistics -->
+                <div class="education-stats">
+                    <div class="stat-card">
+                        <span class="stat-icon">🏆</span>
+                        <span class="stat-number">16</span>
+                        <div class="stat-label" data-en="Years of Learning" data-id="Tahun Belajar">Years of Learning</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">📚</span>
+                        <span class="stat-number">4</span>
+                        <div class="stat-label" data-en="Educational Levels" data-id="Tingkat Pendidikan">Educational Levels</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">⭐</span>
+                        <span class="stat-number">1st</span>
+                        <div class="stat-label" data-en="Elementary Rank" data-id="Peringkat SD">Elementary Rank</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">🎨</span>
+                        <span class="stat-number">3rd</span>
+                        <div class="stat-label" data-en="Math Olympiad" data-id="Olimpiade Matematika">Math Olympiad</div>
+                    </div>
+                </div>
+
+                <!-- Education Timeline -->
+                <div class="education-timeline">
+                    <div class="timeline-line"></div>
+                    
+                    <!-- University Education -->
+                    <div class="education-item reveal">
+                        <div class="timeline-marker">🎓</div>
+                        <div class="education-content">
+                            <span class="education-level level-university" data-en="Bachelor's Degree" data-id="Sarjana">Bachelor's Degree</span>
+                            <h3 class="education-title" data-en="Primary School Education (PGSD)" data-id="Pendidikan Guru Sekolah Dasar (PGSD)">Primary School Education (PGSD)</h3>
+                            <div class="education-institution">Universitas Katolik Indonesia Atma Jaya</div>
+                            <div class="education-duration">
+                                <span>📅</span>
+                                <span>2021 - 2025</span>
+                                <span style="margin-left: auto; color: #10b981; font-weight: 700;">✓ Graduated</span>
+                            </div>
+                            <p class="education-description" data-en="Pursued a comprehensive education in primary school teaching methodology, literacy instruction, and numeracy education. Developed expertise in educational psychology, curriculum development, and pedagogical approaches for elementary students." data-id="Menempuh pendidikan komprehensif dalam metodologi pengajaran SD, instruksi literasi, dan pendidikan numerasi. Mengembangkan keahlian dalam psikologi pendidikan, pengembangan kurikulum, dan pendekatan pedagogis untuk siswa sekolah dasar.">
+                                Pursued a comprehensive education in primary school teaching methodology, literacy instruction, and numeracy education. Developed expertise in educational psychology, curriculum development, and pedagogical approaches for elementary students.
+                            </p>
+                            <ul class="achievements-list">
+                                <li data-en="Specialized in literacy and numeracy instruction for elementary students" data-id="Spesialisasi dalam instruksi literasi dan numerasi untuk siswa sekolah dasar">Specialized in literacy and numeracy instruction for elementary students</li>
+                                <li data-en="Active in student organizations and leadership roles" data-id="Aktif dalam organisasi mahasiswa dan peran kepemimpinan">Active in student organizations and leadership roles</li>
+                                <li data-en="Served as Secretary of Student Representative Board (BPM) FPB" data-id="Menjabat sebagai Sekretaris Badan Perwakilan Mahasiswa (BPM) FPB">Served as Secretary of Student Representative Board (BPM) FPB</li>
+                                <li data-en="Participated in multiple events and organizational activities" data-id="Berpartisipasi dalam berbagai kegiatan acara dan organisasi">Participated in multiple events and organizational activities</li>
+                                <li data-en="Graduated with parents attending ceremony in Jakarta" data-id="Lulus dengan orang tua menghadiri wisuda di Jakarta">Graduated with parents attending ceremony in Jakarta</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Vocational School -->
+                    <div class="education-item reveal">
+                        <div class="timeline-marker">🛠️</div>
+                        <div class="education-content">
+                            <span class="education-level level-vocational" data-en="Vocational School" data-id="SMK">Vocational School</span>
+                            <h3 class="education-title" data-en="SMK Program" data-id="Program SMK">SMK Program</h3>
+                            <div class="education-institution">SMK Yayasan Tinta Emas Indonesia (YATINDO)</div>
+                            <div class="education-duration">
+                                <span>📅</span>
+                                <span>2018 - 2021</span>
+                                <span style="margin-left: auto; color: #10b981; font-weight: 700;">✓ Completed</span>
+                            </div>
+                            <p class="education-description" data-en="Lived at Yayasan Sinar Kasih Harapan while pursuing vocational education in Jakarta. This period was crucial for developing independence, discipline, and practical skills while adapting to life away from family." data-id="Tinggal di Yayasan Sinar Kasih Harapan sambil menempuh pendidikan vokasi di Jakarta. Masa ini krusial untuk mengembangkan kemandirian, disiplin, dan keterampilan praktis saat beradaptasi dengan kehidupan jauh dari keluarga.">
+                                Lived at Yayasan Sinar Kasih Harapan while pursuing vocational education in Jakarta. This period was crucial for developing independence, discipline, and practical skills while adapting to life away from family.
+                            </p>
+                            <ul class="achievements-list">
+                                <li data-en="Developed independence living in foundation environment" data-id="Mengembangkan kemandirian hidup di lingkungan yayasan">Developed independence living in foundation environment</li>
+                                <li data-en="Learned discipline, responsibility, and perseverance" data-id="Belajar disiplin, tanggung jawab, dan ketekunan">Learned discipline, responsibility, and perseverance</li>
+                                <li data-en="Explored interests in creativity and music during this period" data-id="Mengeksplorasi minat dalam kreativitas dan musik selama periode ini">Explored interests in creativity and music during this period</li>
+                                <li data-en="Built confidence in teaching and communication skills" data-id="Membangun kepercayaan diri dalam keterampilan mengajar dan berkomunikasi">Built confidence in teaching and communication skills</li>
+                                <li data-en="Shaped perspective on education and service to others" data-id="Membentuk perspektif tentang pendidikan dan pelayanan kepada orang lain">Shaped perspective on education and service to others</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Junior High School -->
+                    <div class="education-item reveal">
+                        <div class="timeline-marker">📚</div>
+                        <div class="education-content">
+                            <span class="education-level level-junior" data-en="Junior High School" data-id="SMP">Junior High School</span>
+                            <h3 class="education-title" data-en="SMP Sibabangun 4" data-id="SMP Sibabangun 4">SMP Sibabangun 4</h3>
+                            <div class="education-institution">Sibabangun 4 Public Junior High School</div>
+                            <div class="education-duration">
+                                <span>📅</span>
+                                <span>2015 - 2018</span>
+                                <span style="margin-left: auto; color: #10b981; font-weight: 700;">✓ Completed</span>
+                            </div>
+                            <p class="education-description" data-en="A transformative period where leadership skills emerged. Actively participated in student government and academic competitions, consistently ranking in top 5 of class." data-id="Masa transformatif di mana keterampilan kepemimpinan mulai terbentuk. Aktif berpartisipasi dalam pemerintahan siswa dan kompetisi akademis, konsisten masuk 5 besar kelas.">
+                                A transformative period where leadership skills emerged. Actively participated in student government and academic competitions, consistently ranking in top 5 of class.
+                            </p>
+                            <ul class="achievements-list">
+                                <li data-en="Elected as Class President for 7th and 8th grade" data-id="Terpilih sebagai Ketua Kelas untuk kelas 7 dan 8">Elected as Class President for 7th and 8th grade</li>
+                                <li data-en="Regularly led school morning assemblies" data-id="Secara rutin memimpin upacara pagi sekolah">Regularly led school morning assemblies</li>
+                                <li data-en="Consistently ranked in top 5 academically" data-id="Secara konsisten masuk 5 besar akademis">Consistently ranked in top 5 academically</li>
+                                <li data-en="Won 3rd place in Central Tapanuli Mathematics Science Olympiad" data-id="Meraih juara 3 Olimpiade Sains Matematika Tingkat Kabupaten Tapanuli Tengah">Won 3rd place in Central Tapanuli Mathematics Science Olympiad</li>
+                                <li data-en="Active in student council activities and leadership roles" data-id="Aktif dalam kegiatan OSIS dan peran kepemimpinan">Active in student council activities and leadership roles</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Elementary School -->
+                    <div class="education-item reveal">
+                        <div class="timeline-marker">🏫</div>
+                        <div class="education-content">
+                            <span class="education-level level-elementary" data-en="Elementary School" data-id="Sekolah Dasar">Elementary School</span>
+                            <h3 class="education-title" data-en="SD Negeri 155688" data-id="SD Negeri 155688">SD Negeri 155688</h3>
+                            <div class="education-institution">SD Negeri 155688 Muara Sibuntuon</div>
+                            <div class="education-duration">
+                                <span>📅</span>
+                                <span>2009 - 2015</span>
+                                <span style="margin-left: auto; color: #10b981; font-weight: 700;">✓ Completed</span>
+                            </div>
+                            <p class="education-description" data-en="The foundation of my educational journey in rural North Sumatra. Despite initial challenges with reading, demonstrated remarkable improvement through dedication and excellent mentorship." data-id="Fondasi perjalanan pendidikan saya di pedesaan Sumatera Utara. Meski awalnya kesulitan membaca, menunjukkan peningkatan luar biasa melalui dedikasi dan bimbingan yang baik.">
+                                The foundation of my educational journey in rural North Sumatra. Despite initial challenges with reading, demonstrated remarkable improvement through dedication and excellent mentorship.
+                            </p>
+                            <ul class="achievements-list">
+                                <li data-en="Overcame early reading difficulties to become fluent by 4th grade" data-id="Mengatasi kesulitan membaca di awal dan lancar membaca pada kelas 4">Overcame early reading difficulties to become fluent by 4th grade</li>
+                                <li data-en="Excelled in mathematics from the beginning" data-id="Unggul dalam matematika sejak awal">Excelled in mathematics from the beginning</li>
+                                <li data-en="Dramatic improvement: from bottom of class to top 10 by 4th grade" data-id="Peningkatan dramatis: dari peringkat bawah menjadi 10 besar pada kelas 4">Dramatic improvement: from bottom of class to top 10 by 4th grade</li>
+                                <li data-en="Achieved top 5 ranking in 5th grade" data-id="Meraih peringkat 5 besar di kelas 5">Achieved top 5 ranking in 5th grade</li>
+                                <li data-en="Graduated as #1 student in 6th grade" data-id="Lulus sebagai siswa peringkat 1 di kelas 6">Graduated as #1 student in 6th grade</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements & Certifications -->
+                <div class="certifications">
+                    <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem; background: var(--primary-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-en="Key Educational Achievements" data-id="Pencapaian Pendidikan Utama">Key Educational Achievements</h3>
+                    <div class="cert-grid">
+                        <div class="cert-card">
+                            <span class="cert-icon">🏅</span>
+                            <h4 class="cert-title" data-en="Academic Excellence" data-id="Prestasi Akademik">Academic Excellence</h4>
+                            <p class="cert-description" data-en="Consistent high performance from elementary through university, demonstrating strong commitment to learning and continuous improvement." data-id="Prestasi tinggi yang konsisten dari SD hingga universitas, menunjukkan komitmen kuat terhadap belajar dan peningkatan berkelanjutan.">Consistent high performance from elementary through university, demonstrating strong commitment to learning and continuous improvement.</p>
+                        </div>
+                        <div class="cert-card">
+                            <span class="cert-icon">🎖️</span>
+                            <h4 class="cert-title" data-en="Mathematics Olympiad" data-id="Olimpiade Matematika">Mathematics Olympiad</h4>
+                            <p class="cert-description" data-en="3rd place winner in Central Tapanuli Regency Mathematics Science Olympiad, showcasing analytical and problem-solving abilities." data-id="Juara 3 Olimpiade Sains Matematika Tingkat Kabupaten Tapanuli Tengah, menampilkan kemampuan analitis dan pemecahan masalah.">3rd place winner in Central Tapanuli Regency Mathematics Science Olympiad, showcasing analytical and problem-solving abilities.</p>
+                        </div>
+                        <div class="cert-card">
+                            <span class="cert-icon">👥</span>
+                            <h4 class="cert-title" data-en="Leadership Development" data-id="Pengembangan Kepemimpinan">Leadership Development</h4>
+                            <p class="cert-description" data-en="Multiple leadership roles from class president to student representative board secretary, developing management and organizational skills." data-id="Berbagai peran kepemimpinan dari ketua kelas hingga sekretaris badan perwakilan mahasiswa, mengembangkan keterampilan manajemen dan organisasi.">Multiple leadership roles from class president to student representative board secretary, developing management and organizational skills.</p>
+                        </div>
+                        <div class="cert-card">
+                            <span class="cert-icon">🎆</span>
+                            <h4 class="cert-title" data-en="Transformation Story" data-id="Kisah Transformasi">Transformation Story</h4>
+                            <p class="cert-description" data-en="Remarkable journey from struggling reader to academic achiever, inspiring story of perseverance and growth mindset." data-id="Perjalanan luar biasa dari kesulitan membaca menjadi berprestasi akademis, kisah inspiratif tentang ketekunan dan pola pikir berkembang.">Remarkable journey from struggling reader to academic achiever, inspiring story of perseverance and growth mindset.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Educational Philosophy -->
+                <div class="content-card glass-panel" style="margin-top: 4rem; text-align: center;">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem; background: var(--primary-gradient); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;" data-en="Educational Philosophy" data-id="Filosofi Pendidikan">Educational Philosophy</h3>
+                    <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-gray); max-width: 800px; margin: 0 auto;" data-en="&lt;em&gt;&quot;Education is not just about acquiring knowledge, but about developing the character, resilience, and growth mindset needed to overcome challenges and serve others. My journey from struggling with reading in elementary school to earning a university degree in education reflects the transformative power of dedicated learning, supportive mentorship, and unwavering determination.&quot;&lt;/em&gt;" data-id="&lt;em&gt;&quot;Pendidikan bukan sekadar memperoleh pengetahuan, tetapi tentang mengembangkan karakter, ketangguhan, dan pola pikir berkembang yang diperlukan untuk mengatasi tantangan dan melayani sesama. Perjalanan saya dari kesulitan membaca di SD hingga meraih gelar universitas di bidang pendidikan mencerminkan kekuatan transformatif dari belajar dengan dedikasi, bimbingan yang mendukung, dan tekad yang teguh.&quot;&lt;/em&gt;">
+                        <em>"Education is not just about acquiring knowledge, but about developing the character, resilience, and growth mindset needed to overcome challenges and serve others. My journey from struggling with reading in elementary school to earning a university degree in education reflects the transformative power of dedicated learning, supportive mentorship, and unwavering determination."</em>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth reveal animation on scroll
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+    <script src="lang.js"></script>
+</body>
+</html>

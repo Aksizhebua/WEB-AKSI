@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Experience | Aksi Sabar Zebua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .shape-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: #93c5fd;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: #d8b4fe;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            top: 40%;
+            left: 40%;
+            width: 30vw;
+            height: 30vw;
+            background: #86efac;
+            border-radius: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--dark-navy);
+            font-weight: 800;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Layout */
+        section {
+            padding: 120px 20px 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: #6366f1;
+        }
+
+        .nav-links a.active {
+            color: #6366f1;
+        }
+
+        .content-card {
+            padding: 40px;
+        }
+
+        /* Modern Experience Cards */
+        .experience-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .experience-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(31, 38, 135, 0.15);
+        }
+
+        .experience-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .experience-title {
+            flex: 1;
+        }
+
+        .experience-title h3 {
+            color: var(--dark-navy);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .company-name {
+            color: #6366f1;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .duration {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .experience-type {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .type-professional {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .type-education {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+
+        .type-service {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .type-organization {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .experience-description {
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .experience-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .experience-list li {
+            position: relative;
+            padding: 8px 0 8px 30px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .experience-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            font-size: 16px;
+        }
+
+        /* Section Dividers */
+        .section-divider {
+            text-align: center;
+            margin: 4rem 0 3rem;
+            position: relative;
+        }
+
+        .section-divider h3 {
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Scroll Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            nav {
+                width: 95%;
+                padding: 15px;
+                border-radius: 20px;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .experience-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .duration {
+                align-self: flex-start;
+            }
+
+            .section-divider h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .experience-card {
+                padding: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <nav class="glass-panel">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="experience.html" class="active">Experience</a>
+            <a href="skills.html">Skills</a>
+            <a href="education.html">Education</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <section id="experience">
+        <div class="container reveal">
+            <h2 class="section-title" data-en="Professional Experience" data-id="Pengalaman Profesional">Professional Experience</h2>
+            
+            <!-- Experience Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">2+</span>
+                    <div class="stat-label" data-en="Years Experience" data-id="Tahun Pengalaman">Years Experience</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">10+</span>
+                    <div class="stat-label" data-en="Projects Completed" data-id="Proyek Selesai">Projects Completed</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">15+</span>
+                    <div class="stat-label" data-en="Events Organized" data-id="Event Diorganisir">Events Organized</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">5+</span>
+                    <div class="stat-label" data-en="Leadership Roles" data-id="Peran Kepemimpinan">Leadership Roles</div>
+                </div>
+            </div>
+
+            <div class="content-card glass-panel" style="max-width: 1000px; margin: 0 auto;">
+                
+                <!-- Current Professional Experience -->
+                <div class="section-divider">
+                    <h3 data-en="Current Professional Roles" data-id="Peran Profesional Saat Ini">Current Professional Roles</h3>
+                </div>
+                
+                <div class="experience-grid">
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-professional" data-en="Current Role" data-id="Peran Saat Ini">Current Role</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Operational Excellence" data-id="Keunggulan Operasional">Operational Excellence</h3>
+                                <div class="company-name">PT Atma Jaya Mitra Nusantara</div>
+                            </div>
+                            <div class="duration">Sept 2025 – Present</div>
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="Leading day-to-day operational activities across multiple departments" data-id="Memimpin kegiatan operasional harian di berbagai departemen">Leading day-to-day operational activities across multiple departments</li>
+                            <li data-en="Streamlining workflows and implementing process improvements" data-id="Menyederhanakan alur kerja dan menerapkan peningkatan proses">Streamlining workflows and implementing process improvements</li>
+                            <li data-en="Coordinating cross-functional teams for enhanced productivity" data-id="Mengkoordinasikan tim lintas fungsi untuk meningkatkan produktivitas">Coordinating cross-functional teams for enhanced productivity</li>
+                            <li data-en="Managing end-to-end event preparation and execution" data-id="Mengelola persiapan dan pelaksanaan acara dari awal hingga akhir">Managing end-to-end event preparation and execution</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-professional" data-en="Event Management" data-id="Manajemen Event">Event Management</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Inter Event Specialist" data-id="Spesialis Event Inter">Inter Event Specialist</h3>
+                                <div class="company-name">PT Atma Jaya Mitra Nusantara</div>
+                            </div>
+                            <div class="duration">Nov 2024 – Feb 2026</div>
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="Developed strategic event planning frameworks" data-id="Mengembangkan kerangka perencanaan acara yang strategis">Developed strategic event planning frameworks</li>
+                            <li data-en="Coordinated large-scale events across multiple departments" data-id="Mengkoordinasikan acara besar di berbagai departemen">Coordinated large-scale events across multiple departments</li>
+                            <li data-en="Managed vendor relationships and logistics coordination" data-id="Mengelola hubungan vendor dan koordinasi logistik">Managed vendor relationships and logistics coordination</li>
+                            <li data-en="Ensured seamless on-site event execution and management" data-id="Memastikan pelaksanaan dan pengelolaan acara di lapangan yang mulus">Ensured seamless on-site event execution and management</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Previous Work Experience -->
+                <div class="section-divider">
+                    <h3 data-en="Professional Development" data-id="Pengembangan Profesional">Professional Development</h3>
+                </div>
+                
+                <div class="experience-grid">
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-education" data-en="Community Service" data-id="Pengabdian Masyarakat">Community Service</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Kampus Mengajar 7 Program" data-id="Program Kampus Mengajar 7">Kampus Mengajar 7 Program</h3>
+                                <div class="company-name">SD Ciketing Udik 3</div>
+                            </div>
+                            <div class="duration">Feb 2024 - Jun 2024</div>
+                        </div>
+                        <div class="experience-description" data-en="Led educational initiatives in remote areas as part of the Kampus Mengajar program, demonstrating commitment to community development and educational excellence." data-id="Memimpin inisiatif pendidikan di daerah terpencil sebagai bagian dari program Kampus Mengajar, menunjukkan komitmen terhadap pengembangan masyarakat dan keunggulan pendidikan.">
+                            Led educational initiatives in remote areas as part of the Kampus Mengajar program, demonstrating commitment to community development and educational excellence.
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="Served as Head Teacher for Grades 1-6" data-id="Bertugas sebagai Guru Utama untuk Kelas 1-6">Served as Head Teacher for Grades 1-6</li>
+                            <li data-en="Developed innovative teaching methodologies" data-id="Mengembangkan metodologi pengajaran yang inovatif">Developed innovative teaching methodologies</li>
+                            <li data-en="Mentored students and contributed to curriculum development" data-id="Membimbing siswa dan berkontribusi pada pengembangan kurikulum">Mentored students and contributed to curriculum development</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-service" data-en="Hospitality" data-id="Perhotelan">Hospitality</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Barista &amp; Customer Service" data-id="Barista &amp; Layanan Pelanggan">Barista &amp; Customer Service</h3>
+                                <div class="company-name">Lain Hati Cafe</div>
+                            </div>
+                            <div class="duration">Apr 2024 - Jun 2024</div>
+                        </div>
+                        <div class="experience-description" data-en="Crafted exceptional coffee experiences while developing strong customer service skills in a fast-paced environment." data-id="Menciptakan pengalaman kopi yang luar biasa sekaligus mengembangkan keterampilan layanan pelanggan yang kuat di lingkungan kerja yang dinamis.">
+                            Crafted exceptional coffee experiences while developing strong customer service skills in a fast-paced environment.
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="Mastered coffee brewing techniques and beverage preparation" data-id="Menguasai teknik seduh kopi dan persiapan minuman">Mastered coffee brewing techniques and beverage preparation</li>
+                            <li data-en="Managed inventory and maintained high quality standards" data-id="Mengelola inventaris dan mempertahankan standar kualitas tinggi">Managed inventory and maintained high quality standards</li>
+                            <li data-en="Built strong customer relationships through exceptional service" data-id="Membangun hubungan pelanggan yang kuat melalui layanan luar biasa">Built strong customer relationships through exceptional service</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-service" data-en="Restaurant Service" data-id="Layanan Restoran">Restaurant Service</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Server &amp; Operations Support" data-id="Server &amp; Dukungan Operasional">Server &amp; Operations Support</h3>
+                                <div class="company-name">29 Cosmo Bat Restaurant</div>
+                            </div>
+                            <div class="duration">Sep 2022 - Nov 2023</div>
+                        </div>
+                        <div class="experience-description" data-en="Delivered high-quality dining experiences while developing strong communication and multitasking abilities." data-id="Memberikan pengalaman kuliner berkualitas tinggi sekaligus mengembangkan kemampuan komunikasi dan multitasking yang kuat.">
+                            Delivered high-quality dining experiences while developing strong communication and multitasking abilities.
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="Provided exceptional customer service in high-volume environment" data-id="Memberikan layanan pelanggan luar biasa di lingkungan dengan volume tinggi">Provided exceptional customer service in high-volume environment</li>
+                            <li data-en="Collaborated effectively with kitchen and management teams" data-id="Berkolaborasi secara efektif dengan tim dapur dan manajemen">Collaborated effectively with kitchen and management teams</li>
+                            <li data-en="Maintained high standards of cleanliness and organization" data-id="Mempertahankan standar kebersihan dan kerapian yang tinggi">Maintained high standards of cleanliness and organization</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Leadership & Organizational Experience -->
+                <div class="section-divider">
+                    <h3 data-en="Leadership &amp; Organizations" data-id="Kepemimpinan &amp; Organisasi">Leadership &amp; Organizations</h3>
+                </div>
+                
+                <div class="experience-grid">
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-organization" data-en="Student Leadership" data-id="Kepemimpinan Mahasiswa">Student Leadership</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Secretary - Student Representative Board" data-id="Sekretaris - Badan Perwakilan Mahasiswa">Secretary - Student Representative Board</h3>
+                                <div class="company-name">FPB UAJ (Faculty of Language Education)</div>
+                            </div>
+                            <div class="duration">Aug 2023 - Present</div>
+                        </div>
+                        <div class="experience-description" data-en="Leading administrative operations and fostering communication between student body and faculty administration." data-id="Memimpin operasional administrasi dan mendorong komunikasi antara mahasiswa dengan pihak administrasi fakultas.">
+                            Leading administrative operations and fostering communication between student body and faculty administration.
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="Managed official documentation and meeting coordination" data-id="Mengelola dokumentasi resmi dan koordinasi rapat">Managed official documentation and meeting coordination</li>
+                            <li data-en="Facilitated communication between stakeholders" data-id="Memfasilitasi komunikasi antar pemangku kepentingan">Facilitated communication between stakeholders</li>
+                            <li data-en="Supported strategic planning and policy implementation" data-id="Mendukung perencanaan strategis dan implementasi kebijakan">Supported strategic planning and policy implementation</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-organization" data-en="Coaching &amp; Training" data-id="Pelatihan &amp; Pembinaan">Coaching &amp; Training</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Paskibra Coach" data-id="Pelatih Paskibra">Paskibra Coach</h3>
+                                <div class="company-name">Atma Jaya University</div>
+                            </div>
+                            <div class="duration">2023 - Present</div>
+                        </div>
+                        <div class="experience-description" data-en="Training and mentoring students in flag ceremony protocols while developing leadership and discipline." data-id="Melatih dan membimbing mahasiswa dalam protokol upacara bendera sekaligus mengembangkan kepemimpinan dan kedisiplinan.">
+                            Training and mentoring students in flag ceremony protocols while developing leadership and discipline.
+                        </div>
+                    </div>
+
+                    <div class="experience-card reveal">
+                        <div class="experience-type type-organization" data-en="Event Management" data-id="Manajemen Event">Event Management</div>
+                        <div class="experience-header">
+                            <div class="experience-title">
+                                <h3 data-en="Multiple Event Leadership Roles" data-id="Berbagai Peran Kepemimpinan Event">Multiple Event Leadership Roles</h3>
+                                <div class="company-name">Atma Jaya University</div>
+                            </div>
+                            <div class="duration">2023 - 2024</div>
+                        </div>
+                        <ul class="experience-list">
+                            <li data-en="<strong>Publication Coordinator:</strong> FPB Leadership Camp 2024" data-id="<strong>Koordinator Publikasi:</strong> Leadership Camp FPB 2024"><strong>Publication Coordinator:</strong> FPB Leadership Camp 2024</li>
+                            <li data-en="<strong>Event Head:</strong> FPB Correspondence Training 2023" data-id="<strong>Ketua Acara:</strong> Pelatihan Surat-Menyurat FPB 2023"><strong>Event Head:</strong> FPB Correspondence Training 2023</li>
+                            <li data-en="<strong>Logistics Coordinator:</strong> Alumni Day Event 2023" data-id="<strong>Koordinator Logistik:</strong> Acara Alumni Day 2023"><strong>Logistics Coordinator:</strong> Alumni Day Event 2023</li>
+                            <li data-en="<strong>Committee Member:</strong> Campus Orientation 2023/2024" data-id="<strong>Anggota Panitia:</strong> Orientasi Kampus 2023/2024"><strong>Committee Member:</strong> Campus Orientation 2023/2024</li>
+                            <li data-en="<strong>Logistics Staff:</strong> Focus Discussion Groups" data-id="<strong>Staf Logistik:</strong> Kelompok Diskusi Fokus"><strong>Logistics Staff:</strong> Focus Discussion Groups</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth reveal animation on scroll
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        reveal();
+    </script>
+    <script src="lang.js"></script>
+</body>
+</html>

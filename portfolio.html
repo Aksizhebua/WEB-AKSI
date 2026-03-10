@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Portfolio | Aksi Sabar Zebua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-shapes {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        .shape-1 {
+            top: -10%; left: -10%;
+            width: 50vw; height: 50vw;
+            background: #93c5fd;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -10%; right: -10%;
+            width: 40vw; height: 40vw;
+            background: #d8b4fe;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            top: 40%; left: 40%;
+            width: 30vw; height: 30vw;
+            background: #86efac;
+            border-radius: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        h1, h2, h3, h4 { color: var(--dark-navy); font-weight: 800; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover { color: #6366f1; }
+
+        .nav-links a.active { color: #6366f1; }
+
+        /* Section */
+        section {
+            padding: 120px 20px 80px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== PORTFOLIO STATS ===== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 3.5rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        /* ===== FILTER TABS ===== */
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ===== PORTFOLIO GRID ===== */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-bottom: 4rem;
+        }
+
+        .portfolio-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(99, 102, 241, 0.18);
+        }
+
+        .portfolio-card.hidden {
+            display: none;
+        }
+
+        /* Card Image */
+        .card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-image-placeholder {
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+        }
+
+        /* Card Content */
+        .card-body {
+            padding: 24px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .card-category {
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 50px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .cat-academic   { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+        .cat-event      { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+        .cat-leadership { background: rgba(16, 185, 129, 0.12); color: #059669; }
+        .cat-creative   { background: rgba(236, 72, 153, 0.12); color: #db2777; }
+        .cat-teaching   { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+
+        .card-year {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-tag {
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.18);
+            border-radius: 50px;
+            color: #6366f1;
+        }
+
+        /* ===== FEATURED PROJECT ===== */
+        .featured-section {
+            margin-bottom: 4rem;
+        }
+
+        .featured-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #6366f1;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .featured-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+        }
+
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+            object-fit: cover;
+        }
+
+        .featured-image-placeholder {
+            width: 100%;
+            min-height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+        }
+
+        .featured-body {
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-body .card-category {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .featured-title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+
+        .featured-desc {
+            font-size: 1rem;
+            color: var(--text-gray);
+            line-height: 1.75;
+            margin-bottom: 28px;
+        }
+
+        .featured-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.92rem;
+            color: var(--dark-navy);
+            font-weight: 600;
+        }
+
+        .highlight-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .featured-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+            border-radius: 28px 28px 0 0;
+        }
+
+        .cta-section h3 {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-section p {
+            color: var(--text-gray);
+            font-size: 1.05rem;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.75;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--white);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #6366f1;
+            border: 2px solid #6366f1;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-gradient);
+            color: var(--white);
+            border-color: transparent;
+            transform: translateY(-3px);
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1000px) {
+            .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+            .featured-card { grid-template-columns: 1fr; }
+            .featured-image { min-height: 260px; }
+            .featured-image-placeholder { min-height: 260px; }
+        }
+
+        @media (max-width: 700px) {
+            nav { width: 95%; padding: 15px; border-radius: 20px; }
+            .nav-links { gap: 1rem; }
+            .section-title { font-size: 2rem; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .featured-body { padding: 30px 25px; }
+            .featured-title { font-size: 1.5rem; }
+            .cta-section { padding: 40px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <nav class="glass-panel">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="experience.html">Experience</a>
+            <a href="skills.html">Skills</a>
+            <a href="education.html">Education</a>
+            <a href="portfolio.html" class="active">Portfolio</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <section id="portfolio">
+        <div class="container">
+
+            <!-- Header -->
+            <div class="reveal">
+                <h2 class="section-title" data-en="My Portfolio" data-id="Portofolio Saya">My Portfolio</h2>
+                <p class="section-subtitle" data-en="A collection of works, projects, and achievements throughout my academic, professional, and organizational journey." data-id="Kumpulan karya, proyek, dan pencapaian sepanjang perjalanan akademis, profesional, dan organisasi saya.">
+                    A collection of works, projects, and achievements throughout my academic, professional, and organizational journey.
+                </p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row reveal reveal-delay-1">
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label" data-en="Projects Completed" data-id="Proyek Selesai">Projects Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label" data-en="Events Managed" data-id="Event Dikelola">Events Managed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label" data-en="Leadership Roles" data-id="Peran Kepemimpinan">Leadership Roles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3+</div>
+                    <div class="stat-label" data-en="Years of Experience" data-id="Tahun Pengalaman">Years of Experience</div>
+                </div>
+            </div>
+
+            <!-- Featured Project -->
+            <div class="featured-section reveal reveal-delay-2">
+                <div class="featured-label" data-en="⭐ Featured Project — Undergraduate Thesis" data-id="⭐ Proyek Unggulan — Skripsi">⭐ Featured Project — Undergraduate Thesis</div>
+                <div class="featured-card">
+                    <img src="images/wisuda.jpeg" alt="Numeracy Literacy Research" class="featured-image">
+                    <div class="featured-body">
+                        <span class="card-category cat-academic">Academic</span>
+                        <h2 class="featured-title" data-en="Numeracy Literacy Level of Grade V Students at SD Negeri Ciketing Udik 3" data-id="Tingkat Literasi Numerasi Siswa Kelas V SD Negeri Ciketing Udik 3">Numeracy Literacy Level of Grade V Students at SD Negeri Ciketing Udik 3</h2>
+                        <p class="featured-desc" data-en="A descriptive quantitative study to identify the numeracy literacy level of Grade V students based on the PISA 2022 and AKM frameworks. Measures three key aspects: Formulating, Employing, and Interpreting — in response to Indonesia's low scores in international assessments." data-id="Penelitian kuantitatif deskriptif untuk mengidentifikasi tingkat literasi numerasi siswa Kelas V berdasarkan kerangka PISA 2022 dan AKM. Mengukur tiga aspek utama: Merumuskan, Menerapkan, dan Menafsirkan — sebagai respons atas rendahnya skor Indonesia dalam penilaian internasional.">
+                            A descriptive quantitative study to identify the numeracy literacy level of Grade V students based on the PISA 2022 and AKM frameworks. Measures three key aspects: Formulating, Employing, and Interpreting — in response to Indonesia's low scores in international assessments.
+                        </p>
+                        <div class="featured-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon">🔬</div>
+                                <span data-en="Method: Descriptive Quantitative" data-id="Metode: Kuantitatif Deskriptif">Method: Descriptive Quantitative</span>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">👥</div>
+                                <span data-en="Subjects: 52 out of 235 Grade V Students" data-id="Subjek: 52 dari 235 Siswa Kelas V">Subjects: 52 out of 235 Grade V Students</span>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">📊</div>
+                                <span data-en="Average Score: 22.56 / 51 (low–moderate category)" data-id="Rata-rata Skor: 22,56 / 51 (kategori rendah–sedang)">Average Score: 22.56 / 51 (low–moderate category)</span>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">📐</div>
+                                <span data-en="Framework: PISA 2022 &amp; AKM" data-id="Kerangka: PISA 2022 &amp; AKM">Framework: PISA 2022 &amp; AKM</span>
+                            </div>
+                        </div>
+                        <div class="featured-tags">
+                            <span class="card-tag">Numeracy Literacy</span>
+                            <span class="card-tag">PISA 2022</span>
+                            <span class="card-tag">AKM</span>
+                            <span class="card-tag">Quantitative</span>
+                            <span class="card-tag">PGSD</span>
+                            <span class="card-tag">2024–2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="filter-tabs reveal">
+                    <button class="filter-btn active" data-filter="all" data-en="All" data-id="Semua">All</button>
+                    <button class="filter-btn" data-filter="academic" data-en="Academic" data-id="Akademik">Academic</button>
+                    <button class="filter-btn" data-filter="event" data-en="Event" data-id="Event">Event</button>
+                    <button class="filter-btn" data-filter="leadership" data-en="Leadership" data-id="Kepemimpinan">Leadership</button>
+                    <button class="filter-btn" data-filter="teaching" data-en="Teaching" data-id="Mengajar">Teaching</button>
+                    <button class="filter-btn" data-filter="creative" data-en="Creative" data-id="Kreatif">Creative</button>
+                </div>
+
+            <!-- Portfolio Grid -->
+            <div class="portfolio-grid reveal">
+
+                <!-- Card 1: Microteaching -->
+                <div class="portfolio-card" data-category="teaching">
+                    <img src="images/kampusmengajar.jpg" alt="Program Kampus Mengajar" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-teaching">Teaching</span>
+                            <span class="card-year">2024</span>
+                        </div>
+                        <h3 class="card-title" data-en="Campus Teaching Program (Kampus Mengajar)" data-id="Program Kampus Mengajar">Campus Teaching Program (Kampus Mengajar)</h3>
+                        <p class="card-desc" data-en="Participated in the national Campus Teaching Program, serving as a student educator at elementary schools to help improve literacy and numeracy learning quality." data-id="Berpartisipasi dalam Program Kampus Mengajar nasional, berperan sebagai pengajar mahasiswa di sekolah dasar untuk membantu meningkatkan kualitas pembelajaran literasi dan numerasi.">
+                            Participated in the national Campus Teaching Program, serving as a student educator at elementary schools to help improve literacy and numeracy learning quality.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Kampus Mengajar</span>
+                            <span class="card-tag">PGSD</span>
+                            <span class="card-tag">Community Service</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Event Kampus -->
+                <div class="portfolio-card" data-category="event">
+                    <img src="images/event.png" alt="Koordinator Dokumentasi" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-event">Event</span>
+                            <span class="card-year">2022-2025</span>
+                        </div>
+                        <h3 class="card-title" data-en="Documentation Coordinator" data-id="Koordinator Dokumentasi">Documentation Coordinator</h3>
+                        <p class="card-desc" data-en="Responsible for coordinating all documentation activities at the PKKMB orientation event for PGSD Program, covering 200+ new students." data-id="Bertanggung jawab mengkoordinasikan seluruh kegiatan dokumentasi pada acara orientasi PKKMB Program PGSD, mencakup 200+ mahasiswa baru.">
+                            Responsible for coordinating all documentation activities at the PKKMB orientation event for PGSD Program, covering 200+ new students.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Coordinator</span>
+                            <span class="card-tag">PKKMB</span>
+                            <span class="card-tag">Documentation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Leadership BPM -->
+                <div class="portfolio-card" data-category="leadership">
+                    <img src="images/aksi.JPG" alt="Sekretaris BPM FPB" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-leadership">Leadership</span>
+                            <span class="card-year">2023</span>
+                        </div>
+                        <h3 class="card-title" data-en="Secretary of BPM FPB" data-id="Sekretaris BPM FPB">Secretary of BPM FPB</h3>
+                        <p class="card-desc" data-en="Served as Secretary of the Student Representative Board of the Faculty of Education and Language (BPM FPB), responsible for administration, meeting minutes, and coordination of faculty-level student legislative activities." data-id="Menjabat sebagai Sekretaris Badan Perwakilan Mahasiswa Fakultas Pendidikan dan Bahasa (BPM FPB), bertanggung jawab atas administrasi, notulen rapat, dan koordinasi kegiatan legislatif mahasiswa tingkat fakultas.">
+                            Served as Secretary of the Student Representative Board of the Faculty of Education and Language (BPM FPB), responsible for administration, meeting minutes, and coordination of faculty-level student legislative activities.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">BPM FPB</span>
+                            <span class="card-tag">Secretary</span>
+                            <span class="card-tag">Student Government</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Gathering Nasional -->
+                <div class="portfolio-card" data-category="event">
+                    <img src="images/tobekasi.png" alt="Perjalanan ke Bekasi" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-event">Event</span>
+                            <span class="card-year">2023</span>
+                        </div>
+                        <h3 class="card-title" data-en="National Student Gathering Committee" data-id="Panitia Gathering Mahasiswa Nasional">National Student Gathering Committee</h3>
+                        <p class="card-desc" data-en="Actively involved as a committee member in a national-level student gathering, managing logistics and documentation throughout the event." data-id="Terlibat aktif sebagai anggota panitia dalam gathering mahasiswa tingkat nasional, mengelola logistik dan dokumentasi selama acara berlangsung.">
+                            Actively involved as a committee member in a national-level student gathering, managing logistics and documentation throughout the event.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">National</span>
+                            <span class="card-tag">Logistics</span>
+                            <span class="card-tag">Documentation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Media Pembelajaran -->
+                <div class="portfolio-card" data-category="creative">
+                    <img src="images/Creative.png" alt="Media Pembelajaran Interaktif" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-creative">Creative</span>
+                            <span class="card-year">2024</span>
+                        </div>
+                        <h3 class="card-title" data-en="Interactive Learning Media Development" data-id="Pengembangan Media Pembelajaran Interaktif">Interactive Learning Media Development</h3>
+                        <p class="card-desc" data-en="Designed and created image and animation video-based learning media for Grade III elementary school Science subject." data-id="Merancang dan membuat media pembelajaran berbasis gambar dan video animasi untuk mata pelajaran IPA kelas III sekolah dasar.">
+                            Designed and created image and animation video-based learning media for Grade III elementary school Science subject.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Design</span>
+                            <span class="card-tag">Animation</span>
+                            <span class="card-tag">Science SD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Skripsi ringkas -->
+                <div class="portfolio-card" data-category="academic">
+                    <img src="images/wisuda.jpeg" alt="Skripsi Literasi Numerasi" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-academic">Academic</span>
+                            <span class="card-year">2024–2025</span>
+                        </div>
+                        <h3 class="card-title" data-en="Thesis: Numeracy Literacy of Grade V Elementary Students" data-id="Skripsi: Literasi Numerasi Siswa Kelas V SD">Thesis: Numeracy Literacy of Grade V Elementary Students</h3>
+                        <p class="card-desc" data-en="Measured numeracy literacy levels of 52 students at SDN Ciketing Udik 3 using PISA 2022 &amp; AKM-based instruments across three aspects: Formulating, Employing, and Interpreting." data-id="Mengukur tingkat literasi numerasi 52 siswa di SDN Ciketing Udik 3 menggunakan instrumen berbasis PISA 2022 &amp; AKM pada tiga aspek: Merumuskan, Menerapkan, dan Menafsirkan.">
+                            Measured numeracy literacy levels of 52 students at SDN Ciketing Udik 3 using PISA 2022 &amp; AKM-based instruments across three aspects: Formulating, Employing, and Interpreting.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Numeracy</span>
+                            <span class="card-tag">PISA 2022</span>
+                            <span class="card-tag">Thesis</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7: Yayasan Sinar Kasih Harapan -->
+                <div class="portfolio-card" data-category="leadership">
+                    <img src="images/sekretaris.jpg" alt="Sekretaris Yayasan Sinar Kasih Harapan" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-leadership">Leadership</span>
+                            <span class="card-year">2023–present</span>
+                        </div>
+                        <h3 class="card-title" data-en="Secretary of Yayasan Sinar Kasih Harapan" data-id="Sekretaris Yayasan Sinar Kasih Harapan">Secretary of Yayasan Sinar Kasih Harapan</h3>
+                        <p class="card-desc" data-en="Serving as Secretary of Yayasan Sinar Kasih Harapan since 2023, managing foundation administration, official correspondence, program documentation, and supporting social welfare operations." data-id="Menjabat sebagai Sekretaris Yayasan Sinar Kasih Harapan sejak 2023, mengelola administrasi yayasan, surat-menyurat resmi, dokumentasi program, dan mendukung operasional kesejahteraan sosial.">
+                            Serving as Secretary of Yayasan Sinar Kasih Harapan since 2023, managing foundation administration, official correspondence, program documentation, and supporting social welfare operations.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Foundation</span>
+                            <span class="card-tag">Secretary</span>
+                            <span class="card-tag">Social</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8: Training Workshop -->
+                <div class="portfolio-card" data-category="teaching">
+                    <img src="images/masadepan.png" alt="Workshop Pembelajaran Berdiferensiasi" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-teaching">Teaching</span>
+                            <span class="card-year">2023</span>
+                        </div>
+                        <h3 class="card-title" data-en="Differentiated Learning Workshop" data-id="Workshop Pembelajaran Berdiferensiasi">Differentiated Learning Workshop</h3>
+                        <p class="card-desc" data-en="Participated in and facilitated a workshop on differentiated learning methods for prospective elementary school teachers within the University environment." data-id="Berpartisipasi dan memfasilitasi workshop tentang metode pembelajaran berdiferensiasi bagi calon guru sekolah dasar di lingkungan Universitas.">
+                            Participated in and facilitated a workshop on differentiated learning methods for prospective elementary school teachers within the University environment.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Workshop</span>
+                            <span class="card-tag">Facilitator</span>
+                            <span class="card-tag">Differentiation</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 9: Paskibra Coach -->
+                <div class="portfolio-card" data-category="leadership">
+                    <img src="images/paskib.JPG" alt="Pelatih Paskibra Atma Jaya" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-leadership">Leadership</span>
+                            <span class="card-year">2022–2024</span>
+                        </div>
+                        <h3 class="card-title" data-en="Paskibra Coach — Atma Jaya University" data-id="Pelatih Paskibra — Universitas Atma Jaya">Paskibra Coach — Atma Jaya University</h3>
+                        <p class="card-desc" data-en="Trained and mentored Paskibra members at Atma Jaya University in flag ceremony protocols, marching discipline, and team coordination for official university ceremonies." data-id="Melatih dan membimbing anggota Paskibra Universitas Atma Jaya dalam protokol upacara bendera, kedisiplinan baris-berbaris, dan koordinasi tim untuk upacara resmi universitas.">
+                            Trained and mentored Paskibra members at Atma Jaya University in flag ceremony protocols, marching discipline, and team coordination for official university ceremonies.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">Paskibra</span>
+                            <span class="card-tag">Coach</span>
+                            <span class="card-tag">Leadership</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 10: Temuan Penelitian Numerasi -->
+                <div class="portfolio-card" data-category="academic">
+                    <img src="images/dokumentasi.jpg" alt="Analisis Literasi Numerasi" class="card-image">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-academic">Academic</span>
+                            <span class="card-year">2025</span>
+                        </div>
+                        <h3 class="card-title" data-en="Analysis of Three Numeracy Aspects: Formulating, Employing, Interpreting" data-id="Analisis Tiga Aspek Numerasi: Merumuskan, Menerapkan, Menafsirkan">Analysis of Three Numeracy Aspects: Formulating, Employing, Interpreting</h3>
+                        <p class="card-desc" data-en="Thesis findings reveal that most students fall in the low–moderate category (average 22.56/51), with recommendations for periodic measurement and more contextual learning approaches." data-id="Temuan skripsi mengungkapkan bahwa sebagian besar siswa berada dalam kategori rendah–sedang (rata-rata 22,56/51), dengan rekomendasi pengukuran berkala dan pendekatan pembelajaran yang lebih kontekstual.">
+                            Thesis findings reveal that most students fall in the low–moderate category (average 22.56/51), with recommendations for periodic measurement and more contextual learning approaches.
+                        </p>
+                        <div class="card-tags">
+                            <span class="card-tag">AKM</span>
+                            <span class="card-tag">Numeracy</span>
+                            <span class="card-tag">Policy Recommendations</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- End Portfolio Grid -->
+
+            <!-- CTA -->
+            <div class="cta-section reveal">
+                <h3 data-en="Interested in Collaborating?" data-id="Tertarik Berkolaborasi?">Interested in Collaborating?</h3>
+                <p data-en="If you have an exciting project, activity, or opportunity to work together, feel free to reach out to me!" data-id="Jika Anda memiliki proyek, kegiatan, atau peluang menarik untuk bekerja sama, jangan ragu menghubungi saya!">If you have an exciting project, activity, or opportunity to work together, feel free to reach out to me!</p>
+                <div class="cta-buttons">
+                    <a href="contact.html" class="btn btn-primary">📩 Contact Me</a>
+                    <a href="experience.html" class="btn btn-outline">View Experience</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // ===== FILTER LOGIC =====
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('.portfolio-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                cards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.classList.remove('hidden');
+                        card.style.animation = 'none';
+                        card.offsetHeight; // reflow
+                        card.style.animation = '';
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // ===== SCROLL REVEAL =====
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        reveal();
+    </script>
+    <script src="lang.js"></script>
+</body>
+</html>
