@@ -50,6 +50,7 @@
             filter: blur(80px);
             opacity: 0.6;
             animation: float 20s infinite ease-in-out alternate;
+            will-change: transform;
         }
 
         .shape-1 {
@@ -1003,7 +1004,7 @@
             }
         });
 
-        window.addEventListener("scroll", reveal);
+        window.addEventListener("scroll", reveal, { passive: true });
         reveal();
     </script>
     <script src="lang.js"></script>
