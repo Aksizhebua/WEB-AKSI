@@ -221,6 +221,48 @@
             .clock-frame-wrapper iframe { height: 480px; }
         }
 
+        /* Coming Soon Card */
+        .box-card.coming-soon {
+            opacity: 0.72;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box-card.coming-soon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 14px,
+                rgba(99, 102, 241, 0.045) 14px,
+                rgba(99, 102, 241, 0.045) 28px
+            );
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .cs-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 1.2rem;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, rgba(99,102,241,0.18), rgba(168,85,247,0.18));
+            border: 1px solid rgba(99,102,241,0.35);
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #a78bfa;
+        }
+
+        .cs-badge svg {
+            flex-shrink: 0;
+        }
+
         .box-card {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -391,28 +433,44 @@
                     </a>
                 </div>
 
-                <div class="box-card reveal reveal-delay-2">
+                <div class="box-card coming-soon reveal reveal-delay-2">
                     <div class="box-number">02</div>
-                    <h3 class="box-title" data-en="Judul 2" data-id="Judul 2">Judul 2</h3>
-                    <p class="box-body" data-en="Deskripsi untuk judul 2. Isi konten di sini." data-id="Deskripsi untuk judul 2. Isi konten di sini.">Deskripsi untuk judul 2. Isi konten di sini.</p>
+                    <h3 class="box-title" data-en="Coming Soon" data-id="Segera Hadir">Coming Soon</h3>
+                    <p class="box-body" data-en="Something interesting is being prepared." data-id="Sesuatu yang menarik sedang disiapkan.">Something interesting is being prepared.</p>
+                    <span class="cs-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Coming Soon
+                    </span>
                 </div>
 
-                <div class="box-card reveal reveal-delay-3">
+                <div class="box-card coming-soon reveal reveal-delay-3">
                     <div class="box-number">03</div>
-                    <h3 class="box-title" data-en="Judul 3" data-id="Judul 3">Judul 3</h3>
-                    <p class="box-body" data-en="Deskripsi untuk judul 3. Isi konten di sini." data-id="Deskripsi untuk judul 3. Isi konten di sini.">Deskripsi untuk judul 3. Isi konten di sini.</p>
+                    <h3 class="box-title" data-en="Coming Soon" data-id="Segera Hadir">Coming Soon</h3>
+                    <p class="box-body" data-en="Something interesting is being prepared." data-id="Sesuatu yang menarik sedang disiapkan.">Something interesting is being prepared.</p>
+                    <span class="cs-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Coming Soon
+                    </span>
                 </div>
 
-                <div class="box-card reveal reveal-delay-4">
+                <div class="box-card coming-soon reveal reveal-delay-4">
                     <div class="box-number">04</div>
-                    <h3 class="box-title" data-en="Judul 4" data-id="Judul 4">Judul 4</h3>
-                    <p class="box-body" data-en="Deskripsi untuk judul 4. Isi konten di sini." data-id="Deskripsi untuk judul 4. Isi konten di sini.">Deskripsi untuk judul 4. Isi konten di sini.</p>
+                    <h3 class="box-title" data-en="Coming Soon" data-id="Segera Hadir">Coming Soon</h3>
+                    <p class="box-body" data-en="Something interesting is being prepared." data-id="Sesuatu yang menarik sedang disiapkan.">Something interesting is being prepared.</p>
+                    <span class="cs-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Coming Soon
+                    </span>
                 </div>
 
-                <div class="box-card reveal reveal-delay-5">
+                <div class="box-card coming-soon reveal reveal-delay-5">
                     <div class="box-number">05</div>
-                    <h3 class="box-title" data-en="Judul 5" data-id="Judul 5">Judul 5</h3>
-                    <p class="box-body" data-en="Deskripsi untuk judul 5. Isi konten di sini." data-id="Deskripsi untuk judul 5. Isi konten di sini.">Deskripsi untuk judul 5. Isi konten di sini.</p>
+                    <h3 class="box-title" data-en="Coming Soon" data-id="Segera Hadir">Coming Soon</h3>
+                    <p class="box-body" data-en="Something interesting is being prepared." data-id="Sesuatu yang menarik sedang disiapkan.">Something interesting is being prepared.</p>
+                    <span class="cs-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Coming Soon
+                    </span>
                 </div>
 
             </div>
