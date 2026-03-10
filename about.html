@@ -165,6 +165,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav.nav-hidden {
+            top: -120px;
         }
 
         .nav-links {
@@ -530,6 +535,22 @@ Outside the classroom, I continued to develop my creative interests, especially 
         });
 
         window.addEventListener("scroll", reveal, { passive: true });
+
+        // Hide nav on scroll down, show on scroll up
+        var lastScrollY = window.scrollY;
+        var navEl = document.querySelector('nav');
+        window.addEventListener('scroll', function() {
+            var currentY = window.scrollY;
+            var langEl = document.querySelector('.lang-widget');
+            if (currentY > lastScrollY && currentY > 80) {
+                navEl.classList.add('nav-hidden');
+                if (langEl) langEl.classList.add('nav-hidden');
+            } else {
+                navEl.classList.remove('nav-hidden');
+                if (langEl) langEl.classList.remove('nav-hidden');
+            }
+            lastScrollY = currentY;
+        }, { passive: true });
         // Trigger once on load
         reveal();
     </script>
