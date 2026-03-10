@@ -5,13 +5,13 @@
 
 // --- Navigation link translations (mapped by href) ---
 const NAV_TRANS = {
-    'index.html':      { en: 'Home',        id: 'Beranda'    },
-    'about.html':      { en: 'About',       id: 'Tentang'    },
-    'experience.html': { en: 'Experience',  id: 'Pengalaman' },
-    'skills.html':     { en: 'Skills',      id: 'Keahlian'   },
-    'education.html':  { en: 'Education',   id: 'Pendidikan' },
-    'portfolio.html':  { en: 'Portfolio',   id: 'Portofolio' },
-    'contact.html':    { en: 'Contact',     id: 'Kontak'     }
+    '/':           { en: 'Home',        id: 'Beranda'    },
+    'about':       { en: 'About',       id: 'Tentang'    },
+    'experience':  { en: 'Experience',  id: 'Pengalaman' },
+    'skills':      { en: 'Skills',      id: 'Keahlian'   },
+    'education':   { en: 'Education',   id: 'Pendidikan' },
+    'portfolio':   { en: 'Portfolio',   id: 'Portofolio' },
+    'contact':     { en: 'Contact',     id: 'Kontak'     }
 };
 
 // --- Biography section translations for about.html (keyed by element ID) ---

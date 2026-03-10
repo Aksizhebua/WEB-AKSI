@@ -561,6 +561,65 @@
                 gap: 10px;
             }
         }
+
+        /* Hamburger Menu */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            flex-shrink: 0;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2.5px;
+            background: var(--dark-navy);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        @media (max-width: 700px) {
+            nav {
+                width: 92%;
+                padding: 14px 20px;
+                justify-content: flex-end;
+            }
+            .nav-toggle {
+                display: flex;
+            }
+            .nav-links {
+                display: none !important;
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 4px;
+                background: rgba(255, 255, 255, 0.97);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.9);
+                border-radius: 16px;
+                padding: 12px;
+                box-shadow: 0 10px 30px rgba(31, 38, 135, 0.12);
+                z-index: 999;
+            }
+            .nav-links.open {
+                display: flex !important;
+            }
+            .nav-links a {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+                border-radius: 10px;
+            }
+            .nav-links a:hover, .nav-links a.active {
+                background: rgba(99, 102, 241, 0.08);
+                color: #6366f1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -581,6 +640,11 @@
             <a href="portfolio">Portfolio</a>
             <a href="contact">Contact</a>
         </div>
+        <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </nav>
 
     <section id="skills">
@@ -876,6 +940,18 @@
                 }
             }
         }
+
+        // Mobile nav: close on link tap or outside click
+        document.querySelectorAll('.nav-links a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.remove('open');
+            });
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('nav')) {
+                document.querySelector('.nav-links').classList.remove('open');
+            }
+        });
 
         window.addEventListener("scroll", reveal);
         // Trigger once on load
