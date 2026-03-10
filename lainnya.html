@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Lainnya | Aksi Sabar Zebua</title>
+    <meta property="og:title" content="Lainnya | Aksi Sabar Zebua">
+    <meta property="og:description" content="Operational Excellence • Event &amp; Creative Management">
+    <meta property="og:image" content="https://aksizebua.my.id/preview.jpg">
+    <meta property="og:url" content="https://aksizebua.my.id/lainnya">
+    <meta property="og:type" content="website">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out alternate;
+            will-change: transform;
+        }
+
+        .shape-1 {
+            top: -10%; left: -10%;
+            width: 50vw; height: 50vw;
+            background: #93c5fd;
+            border-radius: 50%;
+        }
+
+        .shape-2 {
+            bottom: -10%; right: -10%;
+            width: 40vw; height: 40vw;
+            background: #d8b4fe;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        .shape-3 {
+            top: 40%; left: 40%;
+            width: 30vw; height: 30vw;
+            background: #86efac;
+            border-radius: 50%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        @media (max-width: 700px) {
+            .shape { animation: none; filter: blur(50px); opacity: 0.35; }
+            .glass-panel {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                background: rgba(255, 255, 255, 0.82);
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { color: var(--dark-navy); font-weight: 800; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* Layout */
+        section { padding: 120px 20px 80px; min-height: 100vh; }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.6rem;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover { color: #6366f1; }
+        .nav-links a.active { color: #6366f1; }
+
+        /* Boxes Grid */
+        .boxes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+            margin-top: 1rem;
+        }
+
+        /* Judul 1 — Full-width clock card */
+        .box-card-wide {
+            grid-column: 1 / -1;
+        }
+
+        .clock-frame-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 1.1rem;
+        }
+
+        .clock-frame-wrapper iframe {
+            width: 100%;
+            height: 620px;
+            border: none;
+            display: block;
+            border-radius: 16px;
+        }
+
+        .open-full-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 1rem;
+            padding: 10px 22px;
+            background: var(--primary-gradient);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: var(--transition);
+            box-shadow: 0 4px 18px rgba(99,102,241,0.28);
+        }
+
+        .open-full-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 700px) {
+            .clock-frame-wrapper iframe { height: 480px; }
+        }
+
+        .box-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            padding: 40px 32px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .box-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .box-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 50px rgba(99, 102, 241, 0.15);
+        }
+
+        .box-number {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #a855f7;
+            margin-bottom: 12px;
+        }
+
+        .box-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+            margin-bottom: 14px;
+        }
+
+        .box-body {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.08s; }
+        .reveal-delay-2 { transition-delay: 0.16s; }
+        .reveal-delay-3 { transition-delay: 0.24s; }
+        .reveal-delay-4 { transition-delay: 0.32s; }
+        .reveal-delay-5 { transition-delay: 0.40s; }
+
+        /* Hamburger Menu */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            flex-shrink: 0;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 2.5px;
+            background: var(--dark-navy);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        @media (max-width: 700px) {
+            nav {
+                width: 92%;
+                padding: 14px 20px;
+                justify-content: flex-end;
+            }
+            .nav-toggle { display: flex; }
+            .nav-links {
+                display: none !important;
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0; right: 0;
+                flex-direction: column;
+                gap: 4px;
+                background: rgba(255, 255, 255, 0.97);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.9);
+                border-radius: 16px;
+                padding: 12px;
+                box-shadow: 0 10px 30px rgba(31, 38, 135, 0.12);
+                z-index: 999;
+            }
+            .nav-links.open { display: flex !important; }
+            .nav-links a {
+                padding: 10px 14px;
+                font-size: 0.95rem;
+                border-radius: 10px;
+            }
+            .nav-links a:hover, .nav-links a.active {
+                background: rgba(99, 102, 241, 0.08);
+                color: #6366f1;
+            }
+            .section-title { font-size: 2rem; }
+            .boxes-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <nav class="glass-panel">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="about">About</a>
+            <a href="experience">Experience</a>
+            <a href="skills">Skills</a>
+            <a href="education">Education</a>
+            <a href="portfolio">Portfolio</a>
+            <a href="contact">Contact</a>
+            <a href="lainnya" class="active">Lainnya</a>
+        </div>
+        <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <section id="lainnya">
+        <div class="container">
+
+            <div class="reveal">
+                <h2 class="section-title" data-en="Others" data-id="Lainnya">Others</h2>
+                <p class="section-subtitle" data-en="Additional content and information." data-id="Konten dan informasi tambahan.">
+                    Additional content and information.
+                </p>
+            </div>
+
+            <div class="boxes-grid">
+
+                <div class="box-card box-card-wide reveal reveal-delay-1">
+                    <div class="box-number">01</div>
+                    <h3 class="box-title" data-en="Global TimeSync" data-id="Global TimeSync">Global TimeSync</h3>
+                    <p class="box-body" data-en="Real-time world clock across Indonesia and global cities." data-id="Jam dunia real-time untuk zona waktu Indonesia dan kota global.">Real-time world clock across Indonesia and global cities.</p>
+                    <div class="clock-frame-wrapper">
+                        <iframe src="timesync.html" title="Global TimeSync — Jam Dunia Real-Time" loading="lazy" scrolling="no"></iframe>
+                    </div>
+                    <a href="timesync.html" target="_blank" rel="noopener" class="open-full-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        Buka Halaman Penuh
+                    </a>
+                </div>
+
+                <div class="box-card reveal reveal-delay-2">
+                    <div class="box-number">02</div>
+                    <h3 class="box-title" data-en="Judul 2" data-id="Judul 2">Judul 2</h3>
+                    <p class="box-body" data-en="Deskripsi untuk judul 2. Isi konten di sini." data-id="Deskripsi untuk judul 2. Isi konten di sini.">Deskripsi untuk judul 2. Isi konten di sini.</p>
+                </div>
+
+                <div class="box-card reveal reveal-delay-3">
+                    <div class="box-number">03</div>
+                    <h3 class="box-title" data-en="Judul 3" data-id="Judul 3">Judul 3</h3>
+                    <p class="box-body" data-en="Deskripsi untuk judul 3. Isi konten di sini." data-id="Deskripsi untuk judul 3. Isi konten di sini.">Deskripsi untuk judul 3. Isi konten di sini.</p>
+                </div>
+
+                <div class="box-card reveal reveal-delay-4">
+                    <div class="box-number">04</div>
+                    <h3 class="box-title" data-en="Judul 4" data-id="Judul 4">Judul 4</h3>
+                    <p class="box-body" data-en="Deskripsi untuk judul 4. Isi konten di sini." data-id="Deskripsi untuk judul 4. Isi konten di sini.">Deskripsi untuk judul 4. Isi konten di sini.</p>
+                </div>
+
+                <div class="box-card reveal reveal-delay-5">
+                    <div class="box-number">05</div>
+                    <h3 class="box-title" data-en="Judul 5" data-id="Judul 5">Judul 5</h3>
+                    <p class="box-body" data-en="Deskripsi untuk judul 5. Isi konten di sini." data-id="Deskripsi untuk judul 5. Isi konten di sini.">Deskripsi untuk judul 5. Isi konten di sini.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        // Mobile nav: close on link tap or outside click
+        document.querySelectorAll('.nav-links a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                document.querySelector('.nav-links').classList.remove('open');
+            });
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('nav')) {
+                document.querySelector('.nav-links').classList.remove('open');
+            }
+        });
+
+        window.addEventListener("scroll", reveal, { passive: true });
+        reveal();
+    </script>
+    <script src="lang.js"></script>
+</body>
+</html>

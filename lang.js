@@ -11,7 +11,8 @@ const NAV_TRANS = {
     'skills':      { en: 'Skills',      id: 'Keahlian'   },
     'education':   { en: 'Education',   id: 'Pendidikan' },
     'portfolio':   { en: 'Portfolio',   id: 'Portofolio' },
-    'contact':     { en: 'Contact',     id: 'Kontak'     }
+    'contact':     { en: 'Contact',     id: 'Kontak'     },
+    'lainnya':     { en: 'Others',      id: 'Lainnya'    }
 };
 
 // --- Biography section translations for about.html (keyed by element ID) ---
