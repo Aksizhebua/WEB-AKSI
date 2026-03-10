@@ -12,7 +12,7 @@ const NAV_TRANS = {
     'education':   { en: 'Education',   id: 'Pendidikan' },
     'portfolio':   { en: 'Portfolio',   id: 'Portofolio' },
     'contact':     { en: 'Contact',     id: 'Kontak'     },
-    'lainnya':     { en: 'Others',      id: 'Lainnya'    }
+    'lainnya':     { en: 'Others',      id: 'Others'     }
 };
 
 // --- Biography section translations for about.html (keyed by element ID) ---
