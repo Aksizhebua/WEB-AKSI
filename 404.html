@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <title>Redirecting... | aksizebua.my.id</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        .bg-shapes { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; overflow: hidden; }
+        .shape { position: absolute; filter: blur(80px); opacity: 0.5; animation: float 18s infinite ease-in-out alternate; border-radius: 50%; }
+        .shape-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #93c5fd; }
+        .shape-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #d8b4fe; animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(4%,8%) scale(1.08); } }
+
+        .card {
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.85);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(31,38,135,0.1);
+            padding: 48px 40px 40px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); border-radius: 24px 24px 0 0; }
+
+        .icon-wrap { width: 56px; height: 56px; background: var(--primary-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .icon-wrap svg { color: #fff; }
+
+        h1 { font-size: 1.5rem; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+        p { color: #475569; font-size: 0.9rem; margin-bottom: 24px; line-height: 1.6; }
+        .dest-url { font-size: 0.82rem; color: #6366f1; font-weight: 600; background: rgba(99,102,241,0.08); padding: 6px 14px; border-radius: 8px; display: inline-block; margin-bottom: 24px; word-break: break-all; max-width: 100%; }
+
+        .progress-bar { height: 6px; background: rgba(99,102,241,0.15); border-radius: 50px; overflow: hidden; margin-bottom: 16px; }
+        .progress-fill { height: 100%; background: var(--primary-gradient); border-radius: 50px; width: 0%; transition: width 3s linear; }
+
+        .btn-manual { display: inline-flex; align-items: center; gap: 6px; padding: 10px 22px; background: var(--primary-gradient); color: #fff; text-decoration: none; border-radius: 50px; font-size: 0.85rem; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 16px rgba(99,102,241,0.28); }
+        .btn-manual:hover { opacity: 0.88; transform: translateY(-2px); }
+
+        .not-found { display: none; }
+        .not-found h1 { font-size: 1.3rem; }
+        .back-link { display: inline-flex; align-items: center; gap: 6px; color: #6366f1; font-size: 0.88rem; font-weight: 600; text-decoration: none; margin-top: 16px; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+</div>
+
+<!-- Redirecting State -->
+<div class="card" id="redirectCard">
+    <div class="icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </div>
+    <h1>Mengalihkan...</h1>
+    <p>Kamu akan diarahkan ke tujuan shortlink ini dalam beberapa detik.</p>
+    <div class="dest-url" id="destDisplay"></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <a href="#" id="manualBtn" class="btn-manual">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Klik jika tidak redirect otomatis
+    </a>
+</div>
+
+<!-- Not Found State -->
+<div class="card not-found" id="notFoundCard">
+    <div class="icon-wrap" style="background: linear-gradient(135deg,#f43f5e,#f97316);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <h1 class="not-found">Shortlink Tidak Ditemukan</h1>
+    <p>Link yang kamu akses tidak tersedia atau sudah dihapus.</p>
+    <a href="/" class="btn-manual" style="background: linear-gradient(135deg,#f43f5e,#f97316);">Kembali ke Beranda</a>
+    <br>
+    <a href="/shortlink" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Buka Shortlink Dashboard
+    </a>
+</div>
+
+<script>
+    const DB_KEY = 'aksi_shortlinks';
+
+    function getDB() {
+        try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; }
+        catch { return {}; }
+    }
+    function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+    // Read slug from current path
+    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+
+    // Only intercept if it's NOT a known static page
+    const staticPages = ['', 'about', 'contact', 'education', 'experience', 'index',
+                         'others', 'portfolio', 'skills', 'timesync', 'shortlink'];
+
+    if (!path || staticPages.includes(path.toLowerCase())) {
+        // Real 404 — show not found
+        document.getElementById('redirectCard').style.display = 'none';
+        document.getElementById('notFoundCard').style.display = 'block';
+        document.getElementById('notFoundCard').querySelector('.not-found').style.display = '';
+        document.title = '404 – Halaman Tidak Ditemukan';
+    } else {
+        const db = getDB();
+        const entry = db[path] || db[path.toLowerCase()];
+
+        if (entry) {
+            // Increment click count
+            const key = db[path] ? path : path.toLowerCase();
+            db[key].clicks = (db[key].clicks || 0) + 1;
+            saveDB(db);
+
+            // Show destination
+            document.getElementById('destDisplay').textContent = entry.url;
+            document.getElementById('manualBtn').href = entry.url;
+            document.title = 'Redirecting to ' + entry.url;
+
+            // Start progress bar animation
+            setTimeout(() => {
+                document.getElementById('progressFill').style.width = '100%';
+            }, 50);
+
+            // Auto redirect after 3s
+            setTimeout(() => {
+                window.location.replace(entry.url);
+            }, 3000);
+
+        } else {
+            // Slug not in DB
+            document.getElementById('redirectCard').style.display = 'none';
+            document.getElementById('notFoundCard').style.display = 'block';
+            document.querySelector('.not-found').style.display = '';
+        }
+    }
+</script>
+</body>
+</html>
