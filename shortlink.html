@@ -547,7 +547,6 @@
     /* ── Token helpers ── */
     function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
     /* ── Fetch DB from GitHub ── */
-    const RAW_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
     async function loadFromGitHub() {
         const token = getToken();
         try {
