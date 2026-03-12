@@ -268,6 +268,83 @@
             .back-link { font-size: 0.85rem; margin-bottom: 16px; }
             .action-row { flex-wrap: wrap; }
         }
+
+        /* ── Lock Screen ── */
+        #lockScreen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px;
+        }
+        .lock-card {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 28px;
+            padding: 44px 36px 36px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.45);
+            animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .lock-icon {
+            width: 64px; height: 64px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 28px rgba(99,102,241,0.4);
+        }
+        .lock-icon svg { color: #fff; }
+        .lock-card h2 { color: #f1f5f9; font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
+        .lock-card p { color: #94a3b8; font-size: 0.88rem; margin-bottom: 28px; }
+        .lock-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
+        .lock-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.25);
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .lock-dot.filled { background: #a855f7; border-color: #a855f7; box-shadow: 0 0 8px rgba(168,85,247,0.6); }
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .num-btn {
+            padding: 16px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            color: #f1f5f9;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+        .num-btn:hover { background: rgba(99,102,241,0.22); border-color: rgba(99,102,241,0.4); transform: scale(1.06); }
+        .num-btn:active { transform: scale(0.97); }
+        .num-btn.del { font-size: 1rem; color: #94a3b8; }
+        .lock-err {
+            color: #f87171;
+            font-size: 0.82rem;
+            font-weight: 600;
+            min-height: 20px;
+            margin-top: 4px;
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20%,60% { transform: translateX(-6px); }
+            40%,80% { transform: translateX(6px); }
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.88); }
+            to   { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -276,6 +353,40 @@
     <div class="shape shape-1"></div>
     <div class="shape shape-2"></div>
     <div class="shape shape-3"></div>
+</div>
+
+<!-- Lock Screen -->
+<div id="lockScreen">
+    <div class="lock-card">
+        <div class="lock-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h2>Aksi Short Link</h2>
+        <p>Masukkan kode akses untuk melanjutkan</p>
+        <div class="lock-dots">
+            <div class="lock-dot" id="d0"></div>
+            <div class="lock-dot" id="d1"></div>
+            <div class="lock-dot" id="d2"></div>
+            <div class="lock-dot" id="d3"></div>
+            <div class="lock-dot" id="d4"></div>
+            <div class="lock-dot" id="d5"></div>
+        </div>
+        <div class="numpad">
+            <button class="num-btn" onclick="lockPress('1')">1</button>
+            <button class="num-btn" onclick="lockPress('2')">2</button>
+            <button class="num-btn" onclick="lockPress('3')">3</button>
+            <button class="num-btn" onclick="lockPress('4')">4</button>
+            <button class="num-btn" onclick="lockPress('5')">5</button>
+            <button class="num-btn" onclick="lockPress('6')">6</button>
+            <button class="num-btn" onclick="lockPress('7')">7</button>
+            <button class="num-btn" onclick="lockPress('8')">8</button>
+            <button class="num-btn" onclick="lockPress('9')">9</button>
+            <button class="num-btn del" onclick="lockDel()">&larr;</button>
+            <button class="num-btn" onclick="lockPress('0')">0</button>
+            <button class="num-btn del" onclick="lockClear()">&#x2715;</button>
+        </div>
+        <div class="lock-err" id="lockErr"></div>
+    </div>
 </div>
 
 <div class="wrapper">
@@ -680,9 +791,54 @@
         if (e.key === 'Enter' && (e.target.id === 'longUrl' || e.target.id === 'slugInput')) generateLink();
     });
 
+    /* ── Lock Screen ── */
+    const LOCK_CODE = '030505';
+    const LOCK_KEY  = 'aksi_unlocked';
+    let _lockInput  = '';
+
+    function lockUpdateDots() {
+        for (let i = 0; i < 6; i++) {
+            document.getElementById('d' + i).classList.toggle('filled', i < _lockInput.length);
+        }
+    }
+    function lockPress(n) {
+        if (_lockInput.length >= 6) return;
+        _lockInput += n;
+        lockUpdateDots();
+        document.getElementById('lockErr').textContent = '';
+        if (_lockInput.length === 6) setTimeout(lockCheck, 120);
+    }
+    function lockDel() {
+        _lockInput = _lockInput.slice(0, -1);
+        lockUpdateDots();
+    }
+    function lockClear() {
+        _lockInput = '';
+        lockUpdateDots();
+    }
+    function lockCheck() {
+        if (_lockInput === LOCK_CODE) {
+            sessionStorage.setItem(LOCK_KEY, '1');
+            document.getElementById('lockScreen').style.display = 'none';
+            loadFromGitHub();
+        } else {
+            const errEl = document.getElementById('lockErr');
+            errEl.textContent = 'Kode salah, coba lagi.';
+            errEl.style.animation = 'none';
+            void errEl.offsetWidth;
+            errEl.style.animation = '';
+            _lockInput = '';
+            lockUpdateDots();
+        }
+    }
+
     /* ── Init ── */
     (function init() {
-        loadFromGitHub();
+        if (sessionStorage.getItem(LOCK_KEY) === '1') {
+            document.getElementById('lockScreen').style.display = 'none';
+            loadFromGitHub();
+        }
+        // else: lock screen stays visible, loadFromGitHub called after unlock
     })();
 </script>
 </body>
