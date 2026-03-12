@@ -297,37 +297,41 @@
         }
         .lock-icon svg { color: #fff; }
         .lock-card h2 { color: #f1f5f9; font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
-        .lock-card p { color: #94a3b8; font-size: 0.88rem; margin-bottom: 28px; }
-        .lock-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; }
-        .lock-dot {
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.25);
-            background: transparent;
-            transition: all 0.2s;
-        }
-        .lock-dot.filled { background: #a855f7; border-color: #a855f7; box-shadow: 0 0 8px rgba(168,85,247,0.6); }
-        .numpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-        .num-btn {
-            padding: 16px;
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.1);
+        .lock-card p { color: #94a3b8; font-size: 0.88rem; margin-bottom: 24px; }
+        .lock-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.08);
+            border: 1.5px solid rgba(255,255,255,0.15);
             border-radius: 14px;
             color: #f1f5f9;
-            font-size: 1.15rem;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+            text-align: center;
+            font-family: monospace;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 14px;
+            caret-color: #a855f7;
+        }
+        .lock-input:focus { border-color: #a855f7; box-shadow: 0 0 0 3px rgba(168,85,247,0.18); }
+        .lock-input::placeholder { letter-spacing: 0.1em; font-size: 0.9rem; font-weight: 400; color: rgba(255,255,255,0.25); }
+        .lock-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             font-family: inherit;
             transition: var(--transition);
+            margin-bottom: 4px;
         }
-        .num-btn:hover { background: rgba(99,102,241,0.22); border-color: rgba(99,102,241,0.4); transform: scale(1.06); }
-        .num-btn:active { transform: scale(0.97); }
-        .num-btn.del { font-size: 1rem; color: #94a3b8; }
+        .lock-submit:hover { opacity: 0.88; transform: translateY(-1px); }
         .lock-err {
             color: #f87171;
             font-size: 0.82rem;
@@ -363,28 +367,10 @@
         </div>
         <h2>Aksi Short Link</h2>
         <p>Masukkan kode akses untuk melanjutkan</p>
-        <div class="lock-dots">
-            <div class="lock-dot" id="d0"></div>
-            <div class="lock-dot" id="d1"></div>
-            <div class="lock-dot" id="d2"></div>
-            <div class="lock-dot" id="d3"></div>
-            <div class="lock-dot" id="d4"></div>
-            <div class="lock-dot" id="d5"></div>
-        </div>
-        <div class="numpad">
-            <button class="num-btn" onclick="lockPress('1')">1</button>
-            <button class="num-btn" onclick="lockPress('2')">2</button>
-            <button class="num-btn" onclick="lockPress('3')">3</button>
-            <button class="num-btn" onclick="lockPress('4')">4</button>
-            <button class="num-btn" onclick="lockPress('5')">5</button>
-            <button class="num-btn" onclick="lockPress('6')">6</button>
-            <button class="num-btn" onclick="lockPress('7')">7</button>
-            <button class="num-btn" onclick="lockPress('8')">8</button>
-            <button class="num-btn" onclick="lockPress('9')">9</button>
-            <button class="num-btn del" onclick="lockDel()">&larr;</button>
-            <button class="num-btn" onclick="lockPress('0')">0</button>
-            <button class="num-btn del" onclick="lockClear()">&#x2715;</button>
-        </div>
+        <input class="lock-input" id="lockInput" type="password" maxlength="10"
+               placeholder="Ketik kode..." autocomplete="off" inputmode="numeric"
+               oninput="lockOnInput()" onkeydown="if(event.key==='Enter')lockCheck()">
+        <button class="lock-submit" onclick="lockCheck()">Masuk &rarr;</button>
         <div class="lock-err" id="lockErr"></div>
     </div>
 </div>
@@ -793,30 +779,13 @@
 
     /* ── Lock Screen ── */
     const LOCK_CODE = '030505';
-    let _lockInput  = '';
 
-    function lockUpdateDots() {
-        for (let i = 0; i < 6; i++) {
-            document.getElementById('d' + i).classList.toggle('filled', i < _lockInput.length);
-        }
-    }
-    function lockPress(n) {
-        if (_lockInput.length >= 6) return;
-        _lockInput += n;
-        lockUpdateDots();
+    function lockOnInput() {
         document.getElementById('lockErr').textContent = '';
-        if (_lockInput.length === 6) setTimeout(lockCheck, 120);
-    }
-    function lockDel() {
-        _lockInput = _lockInput.slice(0, -1);
-        lockUpdateDots();
-    }
-    function lockClear() {
-        _lockInput = '';
-        lockUpdateDots();
     }
     function lockCheck() {
-        if (_lockInput === LOCK_CODE) {
+        const val = document.getElementById('lockInput').value;
+        if (val === LOCK_CODE) {
             document.getElementById('lockScreen').style.display = 'none';
             loadFromGitHub();
         } else {
@@ -825,14 +794,15 @@
             errEl.style.animation = 'none';
             void errEl.offsetWidth;
             errEl.style.animation = '';
-            _lockInput = '';
-            lockUpdateDots();
+            document.getElementById('lockInput').value = '';
+            document.getElementById('lockInput').focus();
         }
     }
 
     /* ── Init ── */
     (function init() {
         // Lock screen selalu tampil setiap halaman dibuka
+        setTimeout(() => { const el = document.getElementById('lockInput'); if (el) el.focus(); }, 300);
         // loadFromGitHub() dipanggil setelah kode benar
     })();
 </script>
