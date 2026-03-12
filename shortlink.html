@@ -260,19 +260,6 @@
         <p>Buat, kelola, dan pantau shortlink dengan QR Code otomatis</p>
     </div>
 
-    <!-- Token Section -->
-    <div class="glass token-section" id="tokenSection">
-        <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            GitHub Token (untuk menyimpan link lintas perangkat)
-        </h2>
-        <div class="token-input-row">
-            <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
-            <button class="btn-token" onclick="saveToken()">Simpan</button>
-        </div>
-        <p class="token-hint">Token hanya tersimpan di browser ini. Buat token di GitHub → Settings → Developer settings → Personal access tokens → repo scope.</p>
-    </div>
-
     <!-- Form Buat Link -->
     <div class="glass form-section" id="mainForm">
         <h2>
@@ -623,14 +610,7 @@
 
     /* ── Init ── */
     (function init() {
-        const token = getToken();
-        if (token) {
-            document.getElementById('ghToken').value = '';
-            loadFromGitHub();
-        } else {
-            document.getElementById('mainForm').classList.add('locked');
-            document.getElementById('dashSection').classList.add('locked');
-        }
+        loadFromGitHub();
     })();
 </script>
 </body>
