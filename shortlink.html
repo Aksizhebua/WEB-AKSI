@@ -793,7 +793,6 @@
 
     /* ── Lock Screen ── */
     const LOCK_CODE = '030505';
-    const LOCK_KEY  = 'aksi_unlocked';
     let _lockInput  = '';
 
     function lockUpdateDots() {
@@ -818,7 +817,6 @@
     }
     function lockCheck() {
         if (_lockInput === LOCK_CODE) {
-            sessionStorage.setItem(LOCK_KEY, '1');
             document.getElementById('lockScreen').style.display = 'none';
             loadFromGitHub();
         } else {
@@ -834,11 +832,8 @@
 
     /* ── Init ── */
     (function init() {
-        if (sessionStorage.getItem(LOCK_KEY) === '1') {
-            document.getElementById('lockScreen').style.display = 'none';
-            loadFromGitHub();
-        }
-        // else: lock screen stays visible, loadFromGitHub called after unlock
+        // Lock screen selalu tampil setiap halaman dibuka
+        // loadFromGitHub() dipanggil setelah kode benar
     })();
 </script>
 </body>
