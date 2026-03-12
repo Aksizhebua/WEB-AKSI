@@ -486,6 +486,33 @@
 
 </div>
 
+<!-- Lock Script: terpisah agar tidak terpengaruh error script lain -->
+<script>
+(function() {
+    var CODE = '030505';
+    function lockCheck() {
+        var val = document.getElementById('lockInput').value.trim();
+        if (val === CODE) {
+            document.getElementById('lockScreen').style.display = 'none';
+            if (typeof loadFromGitHub === 'function') loadFromGitHub();
+        } else {
+            var err = document.getElementById('lockErr');
+            err.textContent = 'Kode salah ("' + val + '"), coba lagi.';
+            document.getElementById('lockInput').value = '';
+            document.getElementById('lockInput').focus();
+        }
+    }
+    window.lockCheck = lockCheck;
+    window.lockOnInput = function() {
+        document.getElementById('lockErr').textContent = '';
+    };
+    setTimeout(function() {
+        var el = document.getElementById('lockInput');
+        if (el) el.focus();
+    }, 200);
+})();
+</script>
+
 <script>
     const BASE = 'https://aksizebua.my.id/';
     const GH_OWNER = 'Aksizhebua';
@@ -777,33 +804,9 @@
         if (e.key === 'Enter' && (e.target.id === 'longUrl' || e.target.id === 'slugInput')) generateLink();
     });
 
-    /* ── Lock Screen ── */
-    const LOCK_CODE = '030505';
-
-    function lockOnInput() {
-        document.getElementById('lockErr').textContent = '';
-    }
-    function lockCheck() {
-        const val = document.getElementById('lockInput').value.trim();
-        const errEl = document.getElementById('lockErr');
-        if (val === LOCK_CODE) {
-            document.getElementById('lockScreen').style.display = 'none';
-            loadFromGitHub();
-        } else {
-            errEl.textContent = 'Kode salah (diketik: "' + val + '"), coba lagi.';
-            errEl.style.animation = 'none';
-            void errEl.offsetWidth;
-            errEl.style.animation = '';
-            document.getElementById('lockInput').value = '';
-            document.getElementById('lockInput').focus();
-        }
-    }
-
     /* ── Init ── */
     (function init() {
-        // Lock screen selalu tampil setiap halaman dibuka
-        setTimeout(() => { const el = document.getElementById('lockInput'); if (el) el.focus(); }, 300);
-        // loadFromGitHub() dipanggil setelah kode benar
+        // loadFromGitHub() dipanggil oleh lockCheck setelah kode benar
     })();
 </script>
 </body>
