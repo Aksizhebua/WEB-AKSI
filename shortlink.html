@@ -784,13 +784,13 @@
         document.getElementById('lockErr').textContent = '';
     }
     function lockCheck() {
-        const val = document.getElementById('lockInput').value;
+        const val = document.getElementById('lockInput').value.trim();
+        const errEl = document.getElementById('lockErr');
         if (val === LOCK_CODE) {
             document.getElementById('lockScreen').style.display = 'none';
             loadFromGitHub();
         } else {
-            const errEl = document.getElementById('lockErr');
-            errEl.textContent = 'Kode salah, coba lagi.';
+            errEl.textContent = 'Kode salah (diketik: "' + val + '"), coba lagi.';
             errEl.style.animation = 'none';
             void errEl.offsetWidth;
             errEl.style.animation = '';
