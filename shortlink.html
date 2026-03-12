@@ -208,11 +208,31 @@
         }
         .btn-dl:hover { opacity: 0.88; transform: translateY(-2px); }
 
+        /* Token gate */
+        .token-section { padding: 24px 32px; margin-bottom: 28px; position: relative; overflow: hidden; }
+        .token-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(135deg,#f59e0b,#ef4444); border-radius: 24px 24px 0 0; }
+        .token-section h2 { font-size: 1rem; font-weight: 700; color: var(--dark-navy); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .token-input-row { display: flex; gap: 10px; }
+        .token-input-row input { flex: 1; padding: 11px 14px; border: 1.5px solid rgba(245,158,11,0.3); border-radius: 10px; font-size: 0.9rem; font-family: monospace; background: rgba(255,255,255,0.7); color: var(--dark-navy); outline: none; }
+        .token-input-row input:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.12); }
+        .btn-token { padding: 11px 18px; background: linear-gradient(135deg,#f59e0b,#ef4444); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: var(--transition); }
+        .btn-token:hover { opacity: 0.88; }
+        .token-hint { font-size: 0.78rem; color: var(--text-gray); margin-top: 8px; }
+        .locked { opacity: 0.45; pointer-events: none; filter: blur(1px); }
+
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+            .page-header { padding: 32px 20px 28px; }
+            .page-header h1 { font-size: 1.6rem; }
+            .form-section, .dashboard-section, .token-section { padding: 24px 18px; }
+        }
         @media (max-width: 520px) {
             .link-card { grid-template-columns: 1fr; }
-            .link-actions { flex-direction: row; align-items: center; }
-            .qr-img { width: 64px; height: 64px; }
-            .wrapper { padding: 24px 14px 60px; }
+            .link-actions { flex-direction: row; align-items: center; flex-wrap: wrap; }
+            .qr-img { width: 72px; height: 72px; }
+            .wrapper { padding: 20px 12px 60px; }
+            .back-link { font-size: 0.85rem; margin-bottom: 16px; }
+            .action-row { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -240,8 +260,21 @@
         <p>Buat, kelola, dan pantau shortlink dengan QR Code otomatis</p>
     </div>
 
+    <!-- Token Section -->
+    <div class="glass token-section" id="tokenSection">
+        <h2>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            GitHub Token (untuk menyimpan link lintas perangkat)
+        </h2>
+        <div class="token-input-row">
+            <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+            <button class="btn-token" onclick="saveToken()">Simpan</button>
+        </div>
+        <p class="token-hint">Token hanya tersimpan di browser ini. Buat token di GitHub → Settings → Developer settings → Personal access tokens → repo scope.</p>
+    </div>
+
     <!-- Form Buat Link -->
-    <div class="glass form-section">
+    <div class="glass form-section" id="mainForm">
         <h2>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
             Buat Shortlink Baru
@@ -286,7 +319,7 @@
     </div>
 
     <!-- Dashboard -->
-    <div class="glass dashboard-section">
+    <div class="glass dashboard-section" id="dashSection">
         <div class="dashboard-header">
             <h2>
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
@@ -318,8 +351,58 @@
 
 <script>
     const BASE = 'https://aksizebua.my.id/';
-    const DB_KEY = 'aksi_shortlinks';
+    const GH_OWNER = 'Aksizhebua';
+    const GH_REPO  = 'WEB-AKSI';
+    const GH_FILE  = 'links.json';
+    const GH_BRANCH = 'main';
+    const RAW_URL  = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
+    const TOKEN_KEY = 'aksi_gh_token';
     let qrColor = '6366f1';
+    let _ghSha   = null;
+
+    /* ── Token helpers ── */
+    function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
+    function saveToken() {
+        const val = document.getElementById('ghToken').value.trim();
+        if (!val) return showAlert('Masukkan token terlebih dahulu.', 'error');
+        localStorage.setItem(TOKEN_KEY, val);
+        document.getElementById('ghToken').value = '';
+        showAlert('✓ Token tersimpan.', 'success');
+        document.getElementById('mainForm').classList.remove('locked');
+        document.getElementById('dashSection').classList.remove('locked');
+        loadFromGitHub();
+    }
+
+    /* ── Fetch DB from GitHub ── */
+    async function loadFromGitHub() {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
+            });
+            if (!res.ok) throw new Error(res.status);
+            const json = await res.json();
+            _ghSha = json.sha;
+            const db = JSON.parse(atob(json.content.replace(/\n/g,'')));
+            renderDashboard(db);
+        } catch(e) {
+            showAlert('Gagal memuat data dari GitHub. Periksa token atau koneksi.', 'error');
+        }
+    }
+
+    /* ── Save DB to GitHub ── */
+    async function saveToGitHub(db) {
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(db, null, 2))));
+        const body = { message: 'Update shortlinks', content, branch: GH_BRANCH };
+        if (_ghSha) body.sha = _ghSha;
+        const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+            method: 'PUT',
+            headers: { 'Authorization': 'token ' + getToken(), 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) { const err = await res.json(); throw new Error(err.message); }
+        const data = await res.json();
+        _ghSha = data.content.sha;
+    }
 
     function setSwatch(el) {
         document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
@@ -364,39 +447,40 @@
     function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 
     /* ── Generate ── */
-    function generateLink() {
+    async function generateLink() {
         const longUrl = document.getElementById('longUrl').value.trim();
         const slugRaw = document.getElementById('slugInput').value.trim();
-        const alert   = document.getElementById('alertBox');
 
-        // Validate
         if (!longUrl) return showAlert('Masukkan link tujuan terlebih dahulu.', 'error');
         if (!isValidUrl(longUrl)) return showAlert('Format URL tidak valid. Pastikan diawali https://', 'error');
         if (!slugRaw) return showAlert('Masukkan slug / nama link.', 'error');
+        if (!getToken()) return showAlert('Simpan GitHub token terlebih dahulu.', 'error');
 
         const slug = slugRaw.toLowerCase().replace(/[^a-z0-9\-_]/g, '');
         if (!slug) return showAlert('Slug hanya boleh mengandung huruf, angka, - atau _', 'error');
 
-        const db = getDB();
-        if (db[slug]) return showAlert(`Slug "${slug}" sudah digunakan. Pilih nama lain.`, 'error');
-
-        db[slug] = {
-            url: longUrl,
-            clicks: 0,
-            qrColor: qrColor,
-            created: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
-        };
-        saveDB(db);
-
-        document.getElementById('longUrl').value = '';
-        document.getElementById('slugInput').value = '';
-        showAlert(`✓ Shortlink berhasil dibuat: ${BASE}${slug}`, 'success');
-        renderDashboard();
+        showAlert('Menyimpan...', 'success');
+        try {
+            const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
+            });
+            const json = await res.json();
+            _ghSha = json.sha;
+            const db = JSON.parse(atob(json.content.replace(/\n/g,'')));
+            if (db[slug]) return showAlert(`Slug "${slug}" sudah digunakan. Pilih nama lain.`, 'error');
+            db[slug] = { url: longUrl, clicks: 0, qrColor: qrColor, created: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) };
+            await saveToGitHub(db);
+            document.getElementById('longUrl').value = '';
+            document.getElementById('slugInput').value = '';
+            showAlert(`✓ Shortlink dibuat: ${BASE}${slug}`, 'success');
+            renderDashboard(db);
+        } catch(e) {
+            showAlert('Gagal menyimpan: ' + e.message, 'error');
+        }
     }
 
     /* ── Render Dashboard ── */
-    function renderDashboard() {
-        const db = getDB();
+    function renderDashboard(db) {
         const keys = Object.keys(db).reverse();
         const listEl = document.getElementById('linkList');
         const countEl = document.getElementById('linkCount');
@@ -445,6 +529,10 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                             Hapus
                         </button>
+                        <button class="btn-copy" onclick="incrClick('${slug}')" title="Tambah klik manual" style="background:rgba(245,158,11,0.1);color:#d97706">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            +Klik
+                        </button>
                     </div>
                 </div>
             </div>`;
@@ -465,19 +553,47 @@
     }
 
     /* ── Delete ── */
-    function deleteLink(slug) {
+    async function deleteLink(slug) {
         if (!confirm(`Hapus shortlink "${slug}"?`)) return;
-        const db = getDB();
-        delete db[slug];
-        saveDB(db);
-        renderDashboard();
+        showAlert('Menghapus...', 'success');
+        try {
+            const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
+            });
+            const json = await res.json();
+            _ghSha = json.sha;
+            const db = JSON.parse(atob(json.content.replace(/\n/g,'')));
+            delete db[slug];
+            await saveToGitHub(db);
+            showAlert('✓ Dihapus.', 'success');
+            renderDashboard(db);
+        } catch(e) { showAlert('Gagal hapus: ' + e.message, 'error'); }
+    }
+
+    /* ── +Click manual ── */
+    async function incrClick(slug) {
+        try {
+            const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
+            });
+            const json = await res.json();
+            _ghSha = json.sha;
+            const db = JSON.parse(atob(json.content.replace(/\n/g,'')));
+            if (db[slug]) { db[slug].clicks = (db[slug].clicks || 0) + 1; }
+            await saveToGitHub(db);
+            renderDashboard(db);
+        } catch(e) { showAlert('Gagal update klik: ' + e.message, 'error'); }
     }
 
     /* ── Clear All ── */
-    function clearAll() {
+    async function clearAll() {
         if (!confirm('Hapus semua shortlink?')) return;
-        saveDB({});
-        renderDashboard();
+        showAlert('Menghapus...', 'success');
+        try {
+            await saveToGitHub({});
+            showAlert('✓ Semua link dihapus.', 'success');
+            renderDashboard({});
+        } catch(e) { showAlert('Gagal hapus: ' + e.message, 'error'); }
     }
 
     /* ── Alert ── */
@@ -506,7 +622,16 @@
     });
 
     /* ── Init ── */
-    renderDashboard();
+    (function init() {
+        const token = getToken();
+        if (token) {
+            document.getElementById('ghToken').value = '';
+            loadFromGitHub();
+        } else {
+            document.getElementById('mainForm').classList.add('locked');
+            document.getElementById('dashSection').classList.add('locked');
+        }
+    })();
 </script>
 </body>
 </html>

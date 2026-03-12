@@ -89,47 +89,57 @@
 </div>
 
 <script>
-    const DB_KEY = 'aksi_shortlinks';
+    const GH_OWNER  = 'Aksizhebua';
+    const GH_REPO   = 'WEB-AKSI';
+    const GH_FILE   = 'links.json';
+    const GH_BRANCH = 'main';
+    const RAW_URL   = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
+    const TOKEN_KEY = 'aksi_gh_token';
 
-    function getDB() {
-        try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; }
-        catch { return {}; }
-    }
-    function saveDB(db) { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
-
-    // Read slug from current path
-    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-
-    // Only intercept if it's NOT a known static page
+    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').toLowerCase();
     const staticPages = ['', 'about', 'contact', 'education', 'experience', 'index',
                          'others', 'portfolio', 'skills', 'timesync', 'shortlink'];
 
-    if (!path || staticPages.includes(path.toLowerCase())) {
-        // Real 404 — show not found
+    function showNotFound() {
         document.getElementById('redirectCard').style.display = 'none';
         document.getElementById('notFoundCard').style.display = 'block';
-        document.getElementById('notFoundCard').querySelector('.not-found').style.display = '';
         document.title = '404 – Halaman Tidak Ditemukan';
-    } else {
-        const db = getDB();
-        const entry = db[path] || db[path.toLowerCase()];
-
-        if (entry) {
-            // Increment click count
-            const key = db[path] ? path : path.toLowerCase();
-            db[key].clicks = (db[key].clicks || 0) + 1;
-            saveDB(db);
-
-            // Langsung redirect
-            window.location.replace(entry.url);
-
-        } else {
-            // Slug not in DB
-            document.getElementById('redirectCard').style.display = 'none';
-            document.getElementById('notFoundCard').style.display = 'block';
-            document.querySelector('.not-found').style.display = '';
-        }
     }
+
+    async function tryRedirect() {
+        if (!path || staticPages.includes(path)) { showNotFound(); return; }
+        try {
+            const res = await fetch(RAW_URL + '?t=' + Date.now());
+            if (!res.ok) { showNotFound(); return; }
+            const db = await res.json();
+            const entry = db[path];
+            if (!entry) { showNotFound(); return; }
+
+            // Best-effort click increment (needs token in same browser)
+            const token = localStorage.getItem(TOKEN_KEY);
+            if (token) {
+                try {
+                    const gr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+                    });
+                    const gj = await gr.json();
+                    const gdb = JSON.parse(atob(gj.content.replace(/\n/g,'')));
+                    if (gdb[path]) gdb[path].clicks = (gdb[path].clicks || 0) + 1;
+                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(gdb, null, 2))));
+                    await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: 'click: ' + path, content, sha: gj.sha, branch: GH_BRANCH })
+                    });
+                } catch(_) {}
+            }
+
+            // Redirect
+            window.location.replace(entry.url);
+        } catch(_) { showNotFound(); }
+    }
+
+    tryRedirect();
 </script>
 </body>
 </html>
