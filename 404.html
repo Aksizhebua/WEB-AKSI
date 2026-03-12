@@ -120,20 +120,8 @@
             db[key].clicks = (db[key].clicks || 0) + 1;
             saveDB(db);
 
-            // Show destination
-            document.getElementById('destDisplay').textContent = entry.url;
-            document.getElementById('manualBtn').href = entry.url;
-            document.title = 'Redirecting to ' + entry.url;
-
-            // Start progress bar animation
-            setTimeout(() => {
-                document.getElementById('progressFill').style.width = '100%';
-            }, 50);
-
-            // Auto redirect after 3s
-            setTimeout(() => {
-                window.location.replace(entry.url);
-            }, 3000);
+            // Langsung redirect
+            window.location.replace(entry.url);
 
         } else {
             // Slug not in DB
