@@ -96,6 +96,7 @@
         .alert { padding: 12px 16px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; margin-top: 12px; display: none; }
         .alert.success { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #059669; }
         .alert.error { background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); color: #dc2626; }
+        .alert.info { background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); color: #4f46e5; }
 
         /* Dashboard */
         .dashboard-section { padding: 32px; position: relative; overflow: hidden; }
@@ -208,23 +209,56 @@
         }
         .btn-dl:hover { opacity: 0.88; transform: translateY(-2px); }
 
-        /* Token gate */
-        .token-section { padding: 24px 32px; margin-bottom: 28px; position: relative; overflow: hidden; }
-        .token-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(135deg,#f59e0b,#ef4444); border-radius: 24px 24px 0 0; }
-        .token-section h2 { font-size: 1rem; font-weight: 700; color: var(--dark-navy); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .token-input-row { display: flex; gap: 10px; }
-        .token-input-row input { flex: 1; padding: 11px 14px; border: 1.5px solid rgba(245,158,11,0.3); border-radius: 10px; font-size: 0.9rem; font-family: monospace; background: rgba(255,255,255,0.7); color: var(--dark-navy); outline: none; }
-        .token-input-row input:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.12); }
-        .btn-token { padding: 11px 18px; background: linear-gradient(135deg,#f59e0b,#ef4444); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: var(--transition); }
-        .btn-token:hover { opacity: 0.88; }
-        .token-hint { font-size: 0.78rem; color: var(--text-gray); margin-top: 8px; }
-        .locked { opacity: 0.45; pointer-events: none; filter: blur(1px); }
+        /* Gear / token modal */
+        .gear-btn {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 44px; height: 44px;
+            background: var(--primary-gradient);
+            border: none; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,0.35);
+            transition: var(--transition); z-index: 500;
+        }
+        .gear-btn:hover { transform: rotate(30deg) scale(1.08); }
+        .gear-btn svg { color: #fff; }
+
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 999;
+            background: rgba(15,23,42,0.5); backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px; padding: 32px 28px 24px;
+            max-width: 380px; width: 92%; position: relative;
+            box-shadow: 0 24px 60px rgba(31,38,135,0.16);
+            animation: popIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .modal-box h3 { font-size: 1rem; font-weight: 800; color: var(--dark-navy); margin-bottom: 6px; }
+        .modal-box p { font-size: 0.82rem; color: var(--text-gray); margin-bottom: 16px; line-height: 1.6; }
+        .modal-input-row { display: flex; gap: 8px; }
+        .modal-input-row input {
+            flex: 1; padding: 11px 14px;
+            border: 1.5px solid rgba(99,102,241,0.25); border-radius: 10px;
+            font-size: 0.88rem; font-family: monospace;
+            background: #f8fafc; color: var(--dark-navy); outline: none;
+        }
+        .modal-input-row input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+        .modal-save { padding: 11px 18px; background: var(--primary-gradient); color: #fff; border: none; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: var(--transition); }
+        .modal-save:hover { opacity: 0.88; }
+        .modal-status { font-size: 0.8rem; margin-top: 10px; font-weight: 600; min-height: 20px; }
+        .modal-status.ok { color: #059669; }
+        .modal-status.err { color: #dc2626; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: rgba(99,102,241,0.08); border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #6366f1; transition: var(--transition); }
+        .modal-close:hover { background: rgba(99,102,241,0.18); }
 
         @media (max-width: 600px) {
             .form-row { grid-template-columns: 1fr; }
             .page-header { padding: 32px 20px 28px; }
             .page-header h1 { font-size: 1.6rem; }
-            .form-section, .dashboard-section, .token-section { padding: 24px 18px; }
+            .form-section, .dashboard-section { padding: 24px 18px; }
         }
         @media (max-width: 520px) {
             .link-card { grid-template-columns: 1fr; }
@@ -318,7 +352,26 @@
         <div id="linkList"></div>
     </div>
 
-<!-- QR Modal -->
+<!-- Gear button -->
+<button class="gear-btn" onclick="openTokenModal()" title="Setup token">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+
+<!-- Token Modal -->
+<div class="modal-overlay" id="tokenModal" onclick="closeTokenModal(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('tokenModal').classList.remove('open')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <h3>🔑 GitHub Token</h3>
+        <p>Masukkan Personal Access Token GitHub (scope: <code>repo</code>). Disimpan hanya di browser ini, tidak dikirim ke mana pun.</p>
+        <div class="modal-input-row">
+            <input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off">
+            <button class="modal-save" onclick="saveTokenModal()">Simpan</button>
+        </div>
+        <div class="modal-status" id="tokenStatus"></div>
+    </div>
+</div>
 <div class="qr-modal-overlay" id="qrModal" onclick="closeQR(event)">
     <div class="qr-modal">
         <button class="qr-modal-close" onclick="closeQRBtn()">
@@ -347,32 +400,51 @@
     let qrColor = '6366f1';
     let _ghSha   = null;
 
-    /* ── Token helpers ── */
-    function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
-    function saveToken() {
-        const val = document.getElementById('ghToken').value.trim();
-        if (!val) return showAlert('Masukkan token terlebih dahulu.', 'error');
+    function openTokenModal() {
+        const existing = getToken();
+        if (existing) document.getElementById('tokenInput').placeholder = '•••••••••• (sudah tersimpan)';
+        document.getElementById('tokenModal').classList.add('open');
+    }
+    function closeTokenModal(e) {
+        if (e.target === document.getElementById('tokenModal')) document.getElementById('tokenModal').classList.remove('open');
+    }
+    function saveTokenModal() {
+        const val = document.getElementById('tokenInput').value.trim();
+        const st = document.getElementById('tokenStatus');
+        if (!val) { st.textContent = 'Token tidak boleh kosong.'; st.className = 'modal-status err'; return; }
         localStorage.setItem(TOKEN_KEY, val);
-        document.getElementById('ghToken').value = '';
-        showAlert('✓ Token tersimpan.', 'success');
-        document.getElementById('mainForm').classList.remove('locked');
-        document.getElementById('dashSection').classList.remove('locked');
+        document.getElementById('tokenInput').value = '';
+        st.textContent = '✓ Token tersimpan! Memuat data...';
+        st.className = 'modal-status ok';
+        setTimeout(() => { document.getElementById('tokenModal').classList.remove('open'); st.textContent = ''; }, 1200);
         loadFromGitHub();
     }
 
+    /* ── Token helpers ── */
+    function getToken() { return localStorage.getItem(TOKEN_KEY) || ''; }
     /* ── Fetch DB from GitHub ── */
+    const RAW_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
     async function loadFromGitHub() {
+        const token = getToken();
         try {
-            const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
-                headers: { 'Authorization': 'token ' + getToken(), 'Accept': 'application/vnd.github.v3+json' }
-            });
-            if (!res.ok) throw new Error(res.status);
-            const json = await res.json();
-            _ghSha = json.sha;
-            const db = JSON.parse(atob(json.content.replace(/\n/g,'')));
-            renderDashboard(db);
+            if (token) {
+                // Authenticated: get SHA too (needed for writes)
+                const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
+                    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (!res.ok) throw new Error(res.status);
+                const json = await res.json();
+                _ghSha = json.sha;
+                renderDashboard(JSON.parse(atob(json.content.replace(/\n/g,''))));
+            } else {
+                // Public read via raw URL — view-only mode
+                const res = await fetch(RAW_URL + '?t=' + Date.now());
+                if (!res.ok) throw new Error(res.status);
+                renderDashboard(await res.json());
+                showAlert('Mode baca saja. Klik ⚙️ untuk setup token agar bisa menambah/menghapus link.', 'info');
+            }
         } catch(e) {
-            showAlert('Gagal memuat data dari GitHub. Periksa token atau koneksi.', 'error');
+            showAlert('Gagal memuat data. Periksa koneksi atau setup token via ⚙️.', 'error');
         }
     }
 

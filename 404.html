@@ -89,13 +89,7 @@
 </div>
 
 <script>
-    const GH_OWNER  = 'Aksizhebua';
-    const GH_REPO   = 'WEB-AKSI';
-    const GH_FILE   = 'links.json';
-    const GH_BRANCH = 'main';
-    const RAW_URL   = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}`;
-    const TOKEN_KEY = 'aksi_gh_token';
-
+    const RAW_URL = 'https://raw.githubusercontent.com/Aksizhebua/WEB-AKSI/main/links.json';
     const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '').toLowerCase();
     const staticPages = ['', 'about', 'contact', 'education', 'experience', 'index',
                          'others', 'portfolio', 'skills', 'timesync', 'shortlink'];
@@ -114,27 +108,6 @@
             const db = await res.json();
             const entry = db[path];
             if (!entry) { showNotFound(); return; }
-
-            // Best-effort click increment (needs token in same browser)
-            const token = localStorage.getItem(TOKEN_KEY);
-            if (token) {
-                try {
-                    const gr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
-                        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
-                    });
-                    const gj = await gr.json();
-                    const gdb = JSON.parse(atob(gj.content.replace(/\n/g,'')));
-                    if (gdb[path]) gdb[path].clicks = (gdb[path].clicks || 0) + 1;
-                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(gdb, null, 2))));
-                    await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`, {
-                        method: 'PUT',
-                        headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: 'click: ' + path, content, sha: gj.sha, branch: GH_BRANCH })
-                    });
-                } catch(_) {}
-            }
-
-            // Redirect
             window.location.replace(entry.url);
         } catch(_) { showNotFound(); }
     }
