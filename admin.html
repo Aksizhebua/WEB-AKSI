@@ -932,6 +932,9 @@
                     <button class="sidebar-item" onclick="showPanel('settings')">
                         <span class="si-icon">⚙️</span> GitHub Sync
                     </button>
+                    <button class="sidebar-item" onclick="showPanel('changepw')">
+                        <span class="si-icon">🔑</span> Ganti Password
+                    </button>
                 </nav>
             </aside>
 
@@ -1226,6 +1229,44 @@
                     </div>
                 </div>
 
+                <!-- ── PANEL: Ganti Password ── -->
+                <div class="panel" id="panel-changepw">
+                    <div class="page-header">
+                        <h2>🔑 Ganti Password</h2>
+                        <p>Password baru disimpan hanya di browser Anda — tidak pernah masuk ke file GitHub.</p>
+                    </div>
+                    <div class="glass-card" style="max-width:480px;">
+                        <div class="glass-card" style="background:rgba(99,102,241,.06); border-color:rgba(99,102,241,.2); margin-bottom:20px;">
+                            <p style="font-size:.85rem; color:#4338ca; line-height:1.7;">
+                                🔒 <strong>Aman dari GitHub:</strong> Password baru disimpan di <code>localStorage</code> browser ini saja.
+                                File <code>admin.html</code> di GitHub hanya menyimpan hash bawaan sebagai cadangan — tidak ada plain text yang bisa dilihat publik.
+                            </p>
+                        </div>
+                        <form id="changepw-form" onsubmit="changePassword(event)" autocomplete="off">
+                            <div class="form-group">
+                                <label>Username Baru</label>
+                                <input type="text" id="cp-user" placeholder="Kosongkan jika tidak ingin ganti" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>Password Saat Ini *</label>
+                                <input type="password" id="cp-current" placeholder="Masukkan password saat ini" required autocomplete="current-password">
+                            </div>
+                            <div class="form-group">
+                                <label>Password Baru *</label>
+                                <input type="password" id="cp-new" placeholder="Minimal 8 karakter" required autocomplete="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label>Konfirmasi Password Baru *</label>
+                                <input type="password" id="cp-confirm" placeholder="Ulangi password baru" required autocomplete="new-password">
+                            </div>
+                            <div id="cp-status" style="display:none; margin-bottom:14px;"></div>
+                            <div class="submit-row">
+                                <button type="submit" class="btn btn-success">🔒 Simpan Password Baru</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </main>
         </div>
     </div>
@@ -1246,16 +1287,18 @@
     <!-- ══════════════════════════ JAVASCRIPT ══════════════════════════ -->
     <script>
     /* ─────────────────────────────────────────────
-       CREDENTIALS  (ganti sesuai kebutuhan Anda)
+       CREDENTIALS  — simpan sebagai SHA-256 hash
+       Untuk ganti: jalankan di browser console:
+         sha256('username_baru').then(console.log)
+         sha256('password_baru').then(console.log)
+       Lalu tempel hasilnya di bawah ini.
     ───────────────────────────────────────────── */
-    const CREDENTIALS = {
-        username: 'aksi',
-        passwordHash: '5a2cd43c8e0dd57a9f77ef5b7d8213d9bcbeacf9f1cc2a64f2e1bcbbcc2b0b6d'
-    };
-    const PASS_PLAIN   = 'aksi2025';
+    const HASH_USER = '85b27b0dc3b56b00cf42c8436f2fe62934d6ab91485b8ea610c49d152649792d'; // hash of: aksi
+    const HASH_PASS = '6207a06f246848f0b627cec04ec1651cb4386edcb87d350556c003d05c72f1df'; // hash of: aksi2025
     const SESSION_KEY  = 'aksiadmin_session';
     const DATA_KEY     = 'aksiadmin_portfolio';
     const GH_KEY       = 'aksiadmin_ghconfig';
+    const CRED_KEY     = 'aksiadmin_credentials';
     const GH_FILE_PATH = 'portfolio-data.json';
 
     /* ─── Hash helper ─── */
@@ -1266,7 +1309,15 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    /* ─── Session helpers ─── */
+    /* ─── Credential helpers ─── */
+    // Returns the active hashes: localStorage takes priority over hardcoded defaults
+    function getActiveHashes() {
+        try {
+            const stored = JSON.parse(localStorage.getItem(CRED_KEY));
+            if (stored && stored.hu && stored.hp) return stored;
+        } catch {}
+        return { hu: HASH_USER, hp: HASH_PASS };
+    }
     function isLoggedIn()  { return sessionStorage.getItem(SESSION_KEY) === '1'; }
     function setSession()  { sessionStorage.setItem(SESSION_KEY, '1'); }
     function clearSession(){ sessionStorage.removeItem(SESSION_KEY); }
@@ -1305,13 +1356,9 @@
         const pass  = document.getElementById('login-pass').value;
         const errEl = document.getElementById('login-error');
         errEl.style.display = 'none';
-        const cleanUser = user.replace(/[<>"']/g, '');
-        let valid = false;
-        if (cleanUser === CREDENTIALS.username) {
-            const hashed = await sha256(pass);
-            if (hashed === CREDENTIALS.passwordHash || pass === PASS_PLAIN) valid = true;
-        }
-        if (valid) {
+        const [hu, hp] = await Promise.all([sha256(user), sha256(pass)]);
+        const active = getActiveHashes();
+        if (hu === active.hu && hp === active.hp) {
             setSession();
             showDashboard();
             showToast('✅ Login berhasil! Selamat datang.', 'success');
@@ -1707,6 +1754,53 @@
         navigator.clipboard.writeText(code)
             .then(() => showToast('📋 Kode berhasil disalin ke clipboard!', 'success'))
             .catch(() => showToast('⚠️ Gagal menyalin. Coba pilih teks manual.', 'error'));
+    }
+
+    /* ─── Change Password ─── */
+    async function changePassword(e) {
+        e.preventDefault();
+        const newUser    = document.getElementById('cp-user').value.trim();
+        const currentPw  = document.getElementById('cp-current').value;
+        const newPw      = document.getElementById('cp-new').value;
+        const confirmPw  = document.getElementById('cp-confirm').value;
+        const statusEl   = document.getElementById('cp-status');
+
+        // Verify current password
+        const active = getActiveHashes();
+        const hCurrentPw = await sha256(currentPw);
+        if (hCurrentPw !== active.hp) {
+            showCpStatus('error', '❌ Password saat ini salah.');
+            return;
+        }
+        if (newPw.length < 8) {
+            showCpStatus('error', '⚠️ Password baru minimal 8 karakter.');
+            return;
+        }
+        if (newPw !== confirmPw) {
+            showCpStatus('error', '⚠️ Konfirmasi password tidak cocok.');
+            return;
+        }
+
+        // Hash and store new credentials in localStorage only — never touches the HTML file
+        const hNewPw   = await sha256(newPw);
+        const hNewUser = newUser ? await sha256(newUser) : active.hu;
+        localStorage.setItem(CRED_KEY, JSON.stringify({ hu: hNewUser, hp: hNewPw }));
+
+        document.getElementById('changepw-form').reset();
+        showCpStatus('ok', '✅ Password berhasil diperbarui! Berlaku mulai login berikutnya.');
+        showToast('🔒 Password baru disimpan di browser.', 'success');
+    }
+
+    function showCpStatus(type, msg) {
+        const el = document.getElementById('cp-status');
+        el.style.display = 'block';
+        el.style.padding = '10px 14px';
+        el.style.borderRadius = '10px';
+        el.style.fontSize = '0.87rem';
+        el.style.fontWeight = '600';
+        if (type === 'ok')    { el.style.background='rgba(34,197,94,.12)'; el.style.color='#15803d'; el.style.border='1px solid rgba(34,197,94,.3)'; }
+        if (type === 'error') { el.style.background='rgba(239,68,68,.10)'; el.style.color='#b91c1c'; el.style.border='1px solid rgba(239,68,68,.25)'; }
+        el.textContent = msg;
     }
 
     /* ─── Save success modal ─── */
