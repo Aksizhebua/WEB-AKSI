@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Admin Dashboard | Aksi Sabar Zebua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-navy: #0f172a;
+            --text-gray: #475569;
+            --bg-color: #f8fafc;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-gray); line-height: 1.6; overflow-x: hidden; }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ─── Background shapes ─── */
+        .bg-shapes { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .shape { position: absolute; filter: blur(80px); opacity: 0.55; animation: float 20s infinite ease-in-out alternate; will-change: transform; }
+        .shape-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #93c5fd; border-radius: 50%; }
+        .shape-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #d8b4fe; border-radius: 50%; animation-delay: -5s; }
+        .shape-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: #86efac; border-radius: 50%; animation-delay: -10s; }
+        @keyframes float {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(5%, 10%) scale(1.1); }
+            100% { transform: translate(-5%, -5%) scale(0.9); }
+        }
+
+        /* ─── Login Page ─── */
+        #login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 52px 44px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo .icon {
+            width: 64px; height: 64px;
+            background: var(--primary-gradient);
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 14px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .login-logo h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-logo p {
+            font-size: 0.88rem;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--dark-navy);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1.5px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--dark-navy);
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group textarea { resize: vertical; min-height: 90px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 28px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: #fff;
+            width: 100%;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(34, 197, 94, 0.4); }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 0.82rem;
+            border-radius: 10px;
+        }
+
+        .btn-danger:hover { transform: translateY(-1px); }
+
+        .btn-outline {
+            background: transparent;
+            color: #6366f1;
+            border: 2px solid #6366f1;
+        }
+
+        .btn-outline:hover { background: var(--primary-gradient); color: #fff; border-color: transparent; }
+
+        .btn-sm { padding: 7px 14px; font-size: 0.8rem; border-radius: 8px; }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.83rem;
+            font-weight: 600;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        /* ─── Dashboard Page ─── */
+        #dashboard-page { display: none; }
+
+        /* Top Bar */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 68px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(31, 38, 135, 0.07);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            gap: 16px;
+        }
+
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .topbar-icon {
+            width: 38px; height: 38px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .topbar-brand h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .topbar-brand span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 50px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            font-weight: 700;
+            font-size: 0.82rem;
+            padding: 7px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover { background: #ef4444; color: #fff; }
+
+        /* Layout */
+        .dashboard-layout {
+            display: flex;
+            padding-top: 68px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--glass-border);
+            padding: 24px 16px;
+            position: fixed;
+            top: 68px;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .sidebar-item:hover { background: rgba(99, 102, 241, 0.08); color: #6366f1; }
+        .sidebar-item.active { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+
+        .sidebar-item .si-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(99, 102, 241, 0.1);
+            margin: 12px 4px;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: rgba(71, 85, 105, 0.5);
+            padding: 4px 16px;
+            margin-bottom: 4px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 32px 36px;
+        }
+
+        /* Panels */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* Page header */
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h2 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .page-header p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 22px 20px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(99, 102, 241, 0.13); }
+
+        .stat-card .sc-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .stat-card .sc-num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-card .sc-lbl {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 22px;
+            box-shadow: var(--glass-shadow);
+            padding: 28px 30px;
+            margin-bottom: 26px;
+            position: relative;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            border-radius: 22px 22px 0 0;
+        }
+
+        .glass-card h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 22px;
+        }
+
+        .form-grid .span-2 { grid-column: span 2; }
+
+        /* Category badge preview */
+        .cat-preview {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 50px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .cat-academic   { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+        .cat-event      { background: rgba(245, 158, 11, 0.12);  color: #d97706; }
+        .cat-leadership { background: rgba(16, 185, 129, 0.12);  color: #059669; }
+        .cat-creative   { background: rgba(236, 72, 153, 0.12);  color: #db2777; }
+        .cat-teaching   { background: rgba(59, 130, 246, 0.12);  color: #2563eb; }
+
+        /* Tag input */
+        .tag-input-wrapper {
+            position: relative;
+        }
+
+        .tag-hints {
+            font-size: 0.78rem;
+            color: var(--text-gray);
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* Image preview */
+        .img-preview-box {
+            width: 100%;
+            height: 140px;
+            border: 2px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            background: rgba(99, 102, 241, 0.04);
+            transition: var(--transition);
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .img-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Checkbox row */
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1.5px solid rgba(99, 102, 241, 0.15);
+            border-radius: 10px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 18px; height: 18px;
+            accent-color: #6366f1;
+            cursor: pointer;
+        }
+
+        .checkbox-row label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--dark-navy);
+            cursor: pointer;
+        }
+
+        /* Submit row */
+        .submit-row {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 8px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        /* Portfolio list */
+        .portfolio-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .pf-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 12px rgba(31, 38, 135, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: var(--transition);
+        }
+
+        .pf-item:hover { box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12); transform: translateX(4px); }
+
+        .pf-thumb {
+            width: 80px; height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: rgba(99, 102, 241, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            overflow: hidden;
+        }
+
+        .pf-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        .pf-info { flex: 1; min-width: 0; }
+
+        .pf-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--dark-navy);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .pf-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pf-year {
+            font-size: 0.78rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .pf-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+        .featured-star {
+            font-size: 1rem;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        /* HTML Output */
+        .html-output-box {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px 22px;
+            overflow: auto;
+            max-height: 420px;
+            position: relative;
+        }
+
+        .html-output-box pre {
+            color: #e2e8f0;
+            font-size: 0.8rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.7;
+            white-space: pre;
+        }
+
+        .copy-overlay {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(99, 102, 241, 0.85);
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-overlay:hover { background: #6366f1; }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #0f172a;
+            color: #fff;
+            padding: 13px 26px;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            z-index: 9999;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        #toast.show { transform: translateX(-50%) translateY(0); }
+        #toast.success { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        #toast.error   { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 52px 20px;
+            color: var(--text-gray);
+        }
+
+        .empty-state .es-icon { font-size: 3.5rem; margin-bottom: 14px; opacity: 0.4; }
+        .empty-state p { font-size: 1rem; font-weight: 600; opacity: 0.6; }
+
+        /* About / Instructions card */
+        .info-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .info-list li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            padding: 12px 14px;
+            background: rgba(99, 102, 241, 0.04);
+            border-radius: 10px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        .info-list li .il-num {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .security-note {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1.5px solid rgba(245, 158, 11, 0.25);
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: 0.84rem;
+            color: #92400e;
+            font-weight: 600;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-top: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding: 24px 16px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-grid .span-2 { grid-column: span 1; }
+        }
+
+        @media (max-width: 600px) {
+            .login-card { padding: 36px 22px; }
+            .topbar { padding: 0 16px; }
+            .topbar-brand h2 { font-size: 0.9rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ LOGIN PAGE ═══════════════════════════════════════ -->
+    <div id="login-page">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="icon">🗂️</div>
+                <h1>Portfolio Admin</h1>
+                <p>Aksi Sabar Zebua — Dashboard</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)" autocomplete="off">
+                <div class="form-group">
+                    <label for="login-user">Username</label>
+                    <input type="text" id="login-user" placeholder="Masukkan username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="login-pass">Password</label>
+                    <input type="password" id="login-pass" placeholder="Masukkan password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary">🔐 Masuk ke Dashboard</button>
+                <p class="error-msg" id="login-error">⚠️ Username atau password salah.</p>
+            </form>
+
+            <div class="security-note" style="margin-top:24px;">
+                ⚠️ Portal ini hanya tersedia untuk Anda (pemilik website). Jangan bagikan akses ini.
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ DASHBOARD PAGE ═══════════════════════════════════════ -->
+    <div id="dashboard-page">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div class="topbar-brand">
+                <div class="topbar-icon">🗂️</div>
+                <div>
+                    <h2>Portfolio Admin</h2>
+                    <span>Aksi Sabar Zebua</span>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <div class="user-badge" id="user-badge">👤 Admin</div>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="dashboard-layout">
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section-title">Menu</div>
+                <nav class="sidebar-nav">
+                    <button class="sidebar-item active" onclick="showPanel('overview')">
+                        <span class="si-icon">📊</span> Ringkasan
+                    </button>
+                    <button class="sidebar-item" onclick="showPanel('add')">
+                        <span class="si-icon">➕</span> Tambah Portofolio
+                    </button>
+                    <button class="sidebar-item" onclick="showPanel('list')">
+                        <span class="si-icon">📋</span> Daftar Item
+                    </button>
+                    <button class="sidebar-item" onclick="showPanel('export')">
+                        <span class="si-icon">📤</span> Ekspor HTML
+                    </button>
+                </nav>
+
+                <div class="sidebar-divider"></div>
+
+                <div class="sidebar-section-title">Halaman</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-item" href="portfolio" target="_blank">
+                        <span class="si-icon">🌐</span> Lihat Portfolio
+                    </a>
+                    <a class="sidebar-item" href="index" target="_blank">
+                        <span class="si-icon">🏠</span> Ke Beranda
+                    </a>
+                </nav>
+
+                <div class="sidebar-divider"></div>
+
+                <div class="sidebar-section-title">Panduan</div>
+                <nav class="sidebar-nav">
+                    <button class="sidebar-item" onclick="showPanel('guide')">
+                        <span class="si-icon">📖</span> Cara Pakai
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Main -->
+            <main class="main-content">
+
+                <!-- ── PANEL: Overview ── -->
+                <div class="panel active" id="panel-overview">
+                    <div class="page-header">
+                        <h2>📊 Ringkasan</h2>
+                        <p>Overview semua portofolio yang tersimpan di dashboard ini.</p>
+                    </div>
+
+                    <div class="stats-grid" id="stats-grid">
+                        <!-- injected by JS -->
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>🗓️ Item Terbaru Ditambahkan</h3>
+                        <div id="recent-list">
+                            <!-- injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── PANEL: Tambah Portofolio ── -->
+                <div class="panel" id="panel-add">
+                    <div class="page-header">
+                        <h2>➕ Tambah Portofolio</h2>
+                        <p>Isi form di bawah untuk menambahkan item portofolio baru.</p>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>📄 Detail Item</h3>
+                        <form id="add-form" onsubmit="handleAddItem(event)" autocomplete="off">
+                            <div class="form-grid">
+
+                                <!-- Judul EN -->
+                                <div class="form-group">
+                                    <label>Judul (English) *</label>
+                                    <input type="text" id="f-title-en" placeholder="e.g. Campus Teaching Program" required>
+                                </div>
+
+                                <!-- Judul ID -->
+                                <div class="form-group">
+                                    <label>Judul (Indonesia) *</label>
+                                    <input type="text" id="f-title-id" placeholder="e.g. Program Kampus Mengajar" required>
+                                </div>
+
+                                <!-- Deskripsi EN -->
+                                <div class="form-group span-2">
+                                    <label>Deskripsi (English) *</label>
+                                    <textarea id="f-desc-en" placeholder="Brief description in English..." required></textarea>
+                                </div>
+
+                                <!-- Deskripsi ID -->
+                                <div class="form-group span-2">
+                                    <label>Deskripsi (Indonesia) *</label>
+                                    <textarea id="f-desc-id" placeholder="Deskripsi singkat dalam Bahasa Indonesia..." required></textarea>
+                                </div>
+
+                                <!-- Kategori -->
+                                <div class="form-group">
+                                    <label>Kategori *</label>
+                                    <select id="f-category" onchange="updateCatPreview()" required>
+                                        <option value="">— Pilih Kategori —</option>
+                                        <option value="academic">Academic (Akademik)</option>
+                                        <option value="event">Event</option>
+                                        <option value="leadership">Leadership (Kepemimpinan)</option>
+                                        <option value="teaching">Teaching (Mengajar)</option>
+                                        <option value="creative">Creative (Kreatif)</option>
+                                    </select>
+                                    <div style="margin-top:8px;" id="cat-preview-container"></div>
+                                </div>
+
+                                <!-- Tahun -->
+                                <div class="form-group">
+                                    <label>Tahun *</label>
+                                    <input type="text" id="f-year" placeholder="e.g. 2024 atau 2023–2025" required>
+                                </div>
+
+                                <!-- Tags -->
+                                <div class="form-group span-2">
+                                    <label>Tags (pisahkan dengan koma)</label>
+                                    <div class="tag-input-wrapper">
+                                        <input type="text" id="f-tags" placeholder="e.g. Leadership, Education, PGSD">
+                                        <div class="tag-hints">💡 Contoh: Numeracy, PISA 2022, Quantitative</div>
+                                    </div>
+                                </div>
+
+                                <!-- Gambar URL -->
+                                <div class="form-group">
+                                    <label>URL Gambar <span style="font-weight:400; opacity:.7">(opsional)</span></label>
+                                    <input type="text" id="f-img-url" placeholder="e.g. images/foto.jpg" oninput="updateImgPreview()">
+                                </div>
+
+                                <!-- Emoji Placeholder -->
+                                <div class="form-group">
+                                    <label>Emoji Placeholder <span style="font-weight:400; opacity:.7">(jika tanpa foto)</span></label>
+                                    <input type="text" id="f-img-emoji" placeholder="e.g. 🎓" maxlength="4" oninput="updateImgPreview()">
+                                    <div id="img-preview" class="img-preview-box">🖼️</div>
+                                </div>
+
+                                <!-- Featured -->
+                                <div class="form-group span-2">
+                                    <div class="checkbox-row">
+                                        <input type="checkbox" id="f-featured">
+                                        <label for="f-featured">⭐ Tandai sebagai Featured Project (tampil di bagian atas portfolio)</label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="submit-row">
+                                <button type="button" class="btn btn-outline" onclick="resetForm()">🔄 Reset</button>
+                                <button type="submit" class="btn btn-success">✅ Simpan Portofolio</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ── PANEL: Daftar Item ── -->
+                <div class="panel" id="panel-list">
+                    <div class="page-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <h2>📋 Daftar Portofolio</h2>
+                            <p>Semua item yang tersimpan. Klik hapus untuk menghapus item.</p>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <select id="filter-cat" onchange="renderList()" style="padding:9px 14px; border:1.5px solid rgba(99,102,241,.2); border-radius:10px; background:rgba(255,255,255,.7); font-family:inherit; font-size:.85rem; color:#0f172a; cursor:pointer;">
+                                <option value="all">Semua Kategori</option>
+                                <option value="academic">Academic</option>
+                                <option value="event">Event</option>
+                                <option value="leadership">Leadership</option>
+                                <option value="teaching">Teaching</option>
+                                <option value="creative">Creative</option>
+                            </select>
+                            <button class="btn btn-danger btn-sm" onclick="clearAllConfirm()">🗑️ Hapus Semua</button>
+                        </div>
+                    </div>
+
+                    <div id="portfolio-list"><!-- injected --></div>
+                </div>
+
+                <!-- ── PANEL: Ekspor HTML ── -->
+                <div class="panel" id="panel-export">
+                    <div class="page-header">
+                        <h2>📤 Ekspor HTML</h2>
+                        <p>Salin kode HTML item-item portofolio lalu tempelkan ke file <strong>portfolio.html</strong>.</p>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>⚙️ Pilihan Ekspor</h3>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px;">
+                            <button class="btn btn-primary" onclick="generateExport('grid')">📋 Ekspor Kartu Grid</button>
+                            <button class="btn btn-outline" onclick="generateExport('featured')">⭐ Ekspor Featured</button>
+                            <button class="btn btn-outline" onclick="generateExport('all')">📦 Ekspor Semua</button>
+                        </div>
+                        <div id="export-output" style="display:none;">
+                            <div class="html-output-box">
+                                <button class="copy-overlay" onclick="copyExport()">📋 Salin</button>
+                                <pre id="export-code"></pre>
+                            </div>
+                        </div>
+                        <div id="export-empty" style="text-align:center; padding:40px; color:var(--text-gray); opacity:.6;">
+                            <div style="font-size:3rem; margin-bottom:10px;">📭</div>
+                            <p>Pilih jenis ekspor di atas untuk melihat kode HTML.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>📖 Petunjuk Menempel Kode</h3>
+                        <ul class="info-list">
+                            <li><span class="il-num">1</span> Buka file <code>portfolio.html</code> di editor teks (VS Code, dll).</li>
+                            <li><span class="il-num">2</span> Cari baris komentar <code>&lt;!-- Portfolio Grid --&gt;</code> di dalam file.</li>
+                            <li><span class="il-num">3</span> Tempelkan kode kartu baru di dalam tag <code>&lt;div class="portfolio-grid"&gt;</code>.</li>
+                            <li><span class="il-num">4</span> Untuk Featured, cari bagian <code>&lt;!-- Featured Project --&gt;</code> dan ganti isi <code>.featured-card</code>.</li>
+                            <li><span class="il-num">5</span> Simpan file dan refresh browser untuk melihat hasilnya.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- ── PANEL: Panduan ── -->
+                <div class="panel" id="panel-guide">
+                    <div class="page-header">
+                        <h2>📖 Cara Menggunakan Dashboard</h2>
+                        <p>Panduan lengkap penggunaan portal admin portofolio ini.</p>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>🚀 Alur Kerja</h3>
+                        <ul class="info-list">
+                            <li><span class="il-num">1</span><div><strong>Tambah Portofolio</strong> — Pergi ke menu "Tambah Portofolio", isi semua field yang diperlukan, lalu klik "Simpan".</div></li>
+                            <li><span class="il-num">2</span><div><strong>Kelola Item</strong> — Di menu "Daftar Item" Anda bisa melihat semua item yang sudah disimpan, filter per kategori, atau hapus item yang tidak diperlukan.</div></li>
+                            <li><span class="il-num">3</span><div><strong>Ekspor ke Website</strong> — Pergi ke "Ekspor HTML", pilih jenis ekspor, salin kode HTML yang dihasilkan, lalu tempel ke file <code>portfolio.html</code> di posisi yang sesuai.</div></li>
+                            <li><span class="il-num">4</span><div><strong>Update Gambar</strong> — Letakkan file gambar baru di folder <code>images/</code>, lalu isi field "URL Gambar" dengan nama file, contoh: <code>images/foto-baru.jpg</code>.</div></li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>🏷️ Kategori Portofolio</h3>
+                        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                            <span class="cat-preview cat-academic">Academic</span>
+                            <span class="cat-preview cat-event">Event</span>
+                            <span class="cat-preview cat-leadership">Leadership</span>
+                            <span class="cat-preview cat-teaching">Teaching</span>
+                            <span class="cat-preview cat-creative">Creative</span>
+                        </div>
+                        <div style="margin-top:14px; font-size:.88rem; color:var(--text-gray); line-height:1.7;">
+                            Setiap item harus memiliki satu kategori. Kategori ini akan menentukan warna badge dan memungkinkan filter di halaman portfolio publik.
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>⚠️ Catatan Penting</h3>
+                        <div class="security-note">
+                            🔒 <div>
+                                Data portofolio disimpan secara lokal di browser Anda melalui localStorage. Data ini <strong>tidak akan hilang</strong> jika browser ditutup, namun <strong>tidak otomatis muncul di website publik</strong> — Anda perlu melakukan ekspor HTML dan menempelkannya ke file portfolio.html secara manual.
+                            </div>
+                        </div>
+                        <div class="security-note" style="margin-top:12px;">
+                            🔑 <div>
+                                Login ini bersifat <strong>client-side</strong> (tersimpan di browser) dan dirancang sebagai lapisan akses dasar. Jangan gunakan password penting yang sama dengan akun lain di sini. Untuk keamanan lebih kuat, pertimbangkan migrasi ke platform dengan backend (seperti Netlify CMS, Sanity, dll) di masa mendatang.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <!-- ══════════════════════════ JAVASCRIPT ══════════════════════════ -->
+    <script>
+    /* ─────────────────────────────────────────────
+       CREDENTIALS  (ganti sesuai kebutuhan Anda)
+    ───────────────────────────────────────────── */
+    const CREDENTIALS = {
+        username: 'aksi',
+        // SHA-256 hash of password "aksi2025" 
+        // To change password: update PASS_PLAIN and re-hash, or change both fields.
+        passwordHash: '5a2cd43c8e0dd57a9f77ef5b7d8213d9bcbeacf9f1cc2a64f2e1bcbbcc2b0b6d'
+    };
+    // Plain password stored for fallback comparison on static site (no server)
+    // NOTE: On a static site, the password IS visible in source. This is a convenience
+    // lock, not a true security mechanism. Change default credentials immediately.
+    const PASS_PLAIN = 'aksi2025';
+
+    const SESSION_KEY  = 'aksiadmin_session';
+    const DATA_KEY     = 'aksiadmin_portfolio';
+
+    /* ─── Simple hash function for client-side comparison ─── */
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    /* ─── Session helpers ─── */
+    function isLoggedIn() {
+        return sessionStorage.getItem(SESSION_KEY) === '1';
+    }
+
+    function setSession() { sessionStorage.setItem(SESSION_KEY, '1'); }
+    function clearSession() { sessionStorage.removeItem(SESSION_KEY); }
+
+    /* ─── Boot ─── */
+    window.addEventListener('DOMContentLoaded', () => {
+        if (isLoggedIn()) {
+            showDashboard();
+        }
+        renderOverview();
+    });
+
+    /* ─── Login ─── */
+    async function handleLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('login-user').value.trim();
+        const pass = document.getElementById('login-pass').value;
+        const errEl = document.getElementById('login-error');
+        errEl.style.display = 'none';
+
+        // Sanitize inputs
+        const cleanUser = user.replace(/[<>"']/g, '');
+
+        let valid = false;
+        if (cleanUser === CREDENTIALS.username) {
+            // Try hash comparison first
+            const hashed = await sha256(pass);
+            if (hashed === CREDENTIALS.passwordHash) {
+                valid = true;
+            } else if (pass === PASS_PLAIN) {
+                // Fallback plain comparison (for initial setup)
+                valid = true;
+            }
+        }
+
+        if (valid) {
+            setSession();
+            showDashboard();
+            showToast('✅ Login berhasil! Selamat datang.', 'success');
+        } else {
+            errEl.style.display = 'block';
+            document.getElementById('login-pass').value = '';
+        }
+    }
+
+    function handleLogout() {
+        clearSession();
+        document.getElementById('dashboard-page').style.display = 'none';
+        document.getElementById('login-page').style.display = 'flex';
+        document.getElementById('login-user').value = '';
+        document.getElementById('login-pass').value = '';
+        document.getElementById('login-error').style.display = 'none';
+    }
+
+    function showDashboard() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('dashboard-page').style.display = 'block';
+        renderOverview();
+        renderList();
+    }
+
+    /* ─── Panel switching ─── */
+    function showPanel(name) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+        document.getElementById('panel-' + name).classList.add('active');
+        const btn = [...document.querySelectorAll('.sidebar-item')]
+            .find(b => b.getAttribute('onclick') === `showPanel('${name}')`);
+        if (btn) btn.classList.add('active');
+        if (name === 'list') renderList();
+        if (name === 'overview') renderOverview();
+    }
+
+    /* ─── Data helpers ─── */
+    function getData() {
+        try {
+            return JSON.parse(localStorage.getItem(DATA_KEY)) || [];
+        } catch { return []; }
+    }
+
+    function saveData(items) {
+        localStorage.setItem(DATA_KEY, JSON.stringify(items));
+    }
+
+    /* ─── Sanitize text to prevent XSS ─── */
+    function esc(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    /* ─── Add Item ─── */
+    function handleAddItem(e) {
+        e.preventDefault();
+
+        const titleEn  = document.getElementById('f-title-en').value.trim();
+        const titleId  = document.getElementById('f-title-id').value.trim();
+        const descEn   = document.getElementById('f-desc-en').value.trim();
+        const descId   = document.getElementById('f-desc-id').value.trim();
+        const category = document.getElementById('f-category').value;
+        const year     = document.getElementById('f-year').value.trim();
+        const tagsRaw  = document.getElementById('f-tags').value.trim();
+        const imgUrl   = document.getElementById('f-img-url').value.trim();
+        const imgEmoji = document.getElementById('f-img-emoji').value.trim();
+        const featured = document.getElementById('f-featured').checked;
+
+        if (!category) { showToast('⚠️ Pilih kategori terlebih dahulu!', 'error'); return; }
+
+        // Sanitize tags
+        const tags = tagsRaw
+            ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean).slice(0, 8)
+            : [];
+
+        const item = {
+            id: Date.now(),
+            titleEn, titleId,
+            descEn, descId,
+            category, year, tags,
+            imgUrl, imgEmoji,
+            featured,
+            createdAt: new Date().toISOString()
+        };
+
+        const items = getData();
+        items.unshift(item);
+        saveData(items);
+
+        showToast('✅ Portofolio berhasil ditambahkan!', 'success');
+        resetForm();
+        renderOverview();
+    }
+
+    function resetForm() {
+        document.getElementById('add-form').reset();
+        document.getElementById('img-preview').innerHTML = '🖼️';
+        document.getElementById('cat-preview-container').innerHTML = '';
+    }
+
+    /* ─── Category preview ─── */
+    function updateCatPreview() {
+        const cat = document.getElementById('f-category').value;
+        const container = document.getElementById('cat-preview-container');
+        if (!cat) { container.innerHTML = ''; return; }
+        const labels = { academic:'Academic', event:'Event', leadership:'Leadership', teaching:'Teaching', creative:'Creative' };
+        container.innerHTML = `<span class="cat-preview cat-${cat}">${labels[cat]}</span>`;
+    }
+
+    /* ─── Image preview ─── */
+    function updateImgPreview() {
+        const url   = document.getElementById('f-img-url').value.trim();
+        const emoji = document.getElementById('f-img-emoji').value.trim();
+        const box   = document.getElementById('img-preview');
+        if (url) {
+            box.innerHTML = `<img src="${esc(url)}" alt="preview" onerror="this.parentElement.innerHTML='❌ Gambar tidak ditemukan'">`;
+        } else if (emoji) {
+            box.textContent = emoji;
+        } else {
+            box.textContent = '🖼️';
+        }
+    }
+
+    /* ─── Overview ─── */
+    const CAT_ICONS = { academic:'🎓', event:'🎉', leadership:'🏆', teaching:'📚', creative:'🎨' };
+    const CAT_LABELS = { academic:'Academic', event:'Event', leadership:'Leadership', teaching:'Teaching', creative:'Creative' };
+
+    function renderOverview() {
+        const items = getData();
+        const total = items.length;
+        const byCategory = {};
+        ['academic','event','leadership','teaching','creative'].forEach(c => byCategory[c] = 0);
+        items.forEach(it => { if (byCategory[it.category] !== undefined) byCategory[it.category]++; });
+
+        const grid = document.getElementById('stats-grid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="stat-card">
+                    <span class="sc-icon">📦</span>
+                    <div class="sc-num">${total}</div>
+                    <div class="sc-lbl">Total Item</div>
+                </div>
+                ${Object.entries(byCategory).map(([cat, count]) => `
+                    <div class="stat-card">
+                        <span class="sc-icon">${CAT_ICONS[cat]}</span>
+                        <div class="sc-num">${count}</div>
+                        <div class="sc-lbl">${CAT_LABELS[cat]}</div>
+                    </div>
+                `).join('')}
+                <div class="stat-card">
+                    <span class="sc-icon">⭐</span>
+                    <div class="sc-num">${items.filter(i => i.featured).length}</div>
+                    <div class="sc-lbl">Featured</div>
+                </div>
+            `;
+        }
+
+        const recentEl = document.getElementById('recent-list');
+        if (recentEl) {
+            const recent = items.slice(0, 5);
+            if (recent.length === 0) {
+                recentEl.innerHTML = `<div class="empty-state"><div class="es-icon">📭</div><p>Belum ada portofolio yang ditambahkan.</p></div>`;
+            } else {
+                recentEl.innerHTML = recent.map(item => renderPfItem(item, false)).join('');
+            }
+        }
+    }
+
+    /* ─── Portfolio List ─── */
+    function renderList() {
+        const items = getData();
+        const filter = document.getElementById('filter-cat')?.value || 'all';
+        const filtered = filter === 'all' ? items : items.filter(i => i.category === filter);
+        const el = document.getElementById('portfolio-list');
+        if (!el) return;
+
+        if (filtered.length === 0) {
+            el.innerHTML = `<div class="empty-state"><div class="es-icon">📭</div><p>${items.length === 0 ? 'Belum ada portofolio yang ditambahkan.' : 'Tidak ada item untuk kategori ini.'}</p></div>`;
+            return;
+        }
+
+        el.innerHTML = `<div class="portfolio-list">${filtered.map(item => renderPfItem(item, true)).join('')}</div>`;
+    }
+
+    function renderPfItem(item, showDelete) {
+        const thumb = item.imgUrl
+            ? `<div class="pf-thumb"><img src="${esc(item.imgUrl)}" alt="" onerror="this.parentElement.textContent='${esc(item.imgEmoji) || '🖼️'}'"></div>`
+            : `<div class="pf-thumb">${esc(item.imgEmoji) || '🖼️'}</div>`;
+
+        return `
+            <div class="pf-item" id="pf-${item.id}">
+                ${thumb}
+                <div class="pf-info">
+                    <div class="pf-title">${esc(item.titleEn)}</div>
+                    <div class="pf-meta">
+                        <span class="cat-preview cat-${item.category}">${esc(CAT_LABELS[item.category] || item.category)}</span>
+                        <span class="pf-year">${esc(item.year)}</span>
+                        ${item.featured ? '<span class="featured-star">⭐ Featured</span>' : ''}
+                    </div>
+                </div>
+                ${showDelete ? `
+                <div class="pf-actions">
+                    <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})">🗑️ Hapus</button>
+                </div>` : ''}
+            </div>
+        `;
+    }
+
+    function deleteItem(id) {
+        if (!confirm('Yakin ingin menghapus item ini?')) return;
+        const items = getData().filter(i => i.id !== id);
+        saveData(items);
+        renderList();
+        renderOverview();
+        showToast('🗑️ Item dihapus.', 'success');
+    }
+
+    function clearAllConfirm() {
+        if (!confirm('⚠️ Yakin ingin MENGHAPUS SEMUA item portofolio? Tindakan ini tidak dapat dibatalkan.')) return;
+        saveData([]);
+        renderList();
+        renderOverview();
+        showToast('🗑️ Semua item dihapus.', 'success');
+    }
+
+    /* ─── Export HTML ─── */
+    function generateExport(type) {
+        const items = getData();
+        let output = '';
+        let title  = '';
+
+        if (type === 'featured') {
+            const featured = items.filter(i => i.featured);
+            if (featured.length === 0) { showToast('⚠️ Tidak ada item yang ditandai sebagai Featured.', 'error'); return; }
+            output = featured.map(i => buildFeaturedHTML(i)).join('\n\n');
+            title = '<!-- ===== FEATURED PROJECT ===== -->';
+        } else if (type === 'grid') {
+            const grid = items.filter(i => !i.featured);
+            if (grid.length === 0) { showToast('⚠️ Tidak ada item kartu grid.', 'error'); return; }
+            output = grid.map(i => buildCardHTML(i)).join('\n\n');
+            title = '<!-- ===== PORTFOLIO GRID CARDS ===== -->';
+        } else {
+            if (items.length === 0) { showToast('⚠️ Belum ada item untuk diekspor.', 'error'); return; }
+            const feat = items.filter(i => i.featured).map(i => buildFeaturedHTML(i)).join('\n\n');
+            const grid = items.filter(i => !i.featured).map(i => buildCardHTML(i)).join('\n\n');
+            output = [
+                feat ? '<!-- ===== FEATURED PROJECT ===== -->\n' + feat : '',
+                grid ? '\n\n<!-- ===== PORTFOLIO GRID CARDS ===== -->\n' + grid : ''
+            ].filter(Boolean).join('');
+        }
+
+        document.getElementById('export-code').textContent = title + '\n' + output;
+        document.getElementById('export-output').style.display = 'block';
+        document.getElementById('export-empty').style.display = 'none';
+        showToast('✅ Kode HTML siap disalin!', 'success');
+    }
+
+    function buildCardHTML(item) {
+        const imgEl = item.imgUrl
+            ? `<img src="${esc(item.imgUrl)}" alt="${esc(item.titleEn)}" class="card-image">`
+            : `<div class="card-image-placeholder" style="background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.08))">${esc(item.imgEmoji) || '🖼️'}</div>`;
+        const tagsEl = item.tags.map(t => `<span class="card-tag">${esc(t)}</span>`).join('\n                            ');
+        return `                <!-- ${esc(item.titleEn)} -->
+                <div class="portfolio-card" data-category="${esc(item.category)}">
+                    ${imgEl}
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-category cat-${esc(item.category)}">${esc(CAT_LABELS[item.category])}</span>
+                            <span class="card-year">${esc(item.year)}</span>
+                        </div>
+                        <h3 class="card-title" data-en="${esc(item.titleEn)}" data-id="${esc(item.titleId)}">${esc(item.titleEn)}</h3>
+                        <p class="card-desc" data-en="${esc(item.descEn)}" data-id="${esc(item.descId)}">
+                            ${esc(item.descEn)}
+                        </p>
+                        <div class="card-tags">
+                            ${tagsEl}
+                        </div>
+                    </div>
+                </div>`;
+    }
+
+    function buildFeaturedHTML(item) {
+        const imgEl = item.imgUrl
+            ? `<img src="${esc(item.imgUrl)}" alt="${esc(item.titleEn)}" class="featured-image">`
+            : `<div class="featured-image-placeholder" style="background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.08))">${esc(item.imgEmoji) || '🖼️'}</div>`;
+        const tagsEl = item.tags.map(t => `<span class="card-tag">${esc(t)}</span>`).join('\n                            ');
+        return `            <div class="featured-section reveal reveal-delay-2">
+                <div class="featured-label">⭐ Featured Project</div>
+                <div class="featured-card">
+                    ${imgEl}
+                    <div class="featured-body">
+                        <span class="card-category cat-${esc(item.category)}">${esc(CAT_LABELS[item.category])}</span>
+                        <h2 class="featured-title" data-en="${esc(item.titleEn)}" data-id="${esc(item.titleId)}">${esc(item.titleEn)}</h2>
+                        <p class="featured-desc" data-en="${esc(item.descEn)}" data-id="${esc(item.descId)}">
+                            ${esc(item.descEn)}
+                        </p>
+                        <div class="featured-tags">
+                            ${tagsEl}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+
+    function copyExport() {
+        const code = document.getElementById('export-code').textContent;
+        navigator.clipboard.writeText(code)
+            .then(() => showToast('📋 Kode berhasil disalin ke clipboard!', 'success'))
+            .catch(() => showToast('⚠️ Gagal menyalin. Coba pilih teks manual.', 'error'));
+    }
+
+    /* ─── Toast ─── */
+    let toastTimer = null;
+    function showToast(msg, type = '') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = type ? `show ${type}` : 'show';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { t.className = ''; }, 3000);
+    }
+    </script>
+
+</body>
+</html>
