@@ -496,6 +496,33 @@
             opacity: 0.8;
         }
 
+        /* File upload */
+        .file-upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 22px 16px;
+            border: 2px dashed rgba(99, 102, 241, 0.35);
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.04);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.88rem;
+            color: #6366f1;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+        .file-upload-label:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: #6366f1;
+        }
+        .file-upload-label .upload-icon { font-size: 1.8rem; }
+        .file-upload-label .upload-hint { font-weight: 400; color: var(--text-gray); font-size: 0.8rem; }
+        #f-img-file { display: none; }
+
         /* Image preview */
         .img-preview-box {
             width: 100%;
@@ -957,10 +984,15 @@
                                     </div>
                                 </div>
 
-                                <!-- Gambar URL -->
+                                <!-- Upload Foto -->
                                 <div class="form-group">
-                                    <label>URL Gambar <span style="font-weight:400; opacity:.7">(opsional)</span></label>
-                                    <input type="text" id="f-img-url" placeholder="e.g. images/foto.jpg" oninput="updateImgPreview()">
+                                    <label>Upload Foto <span style="font-weight:400; opacity:.7">(opsional)</span></label>
+                                    <label class="file-upload-label" for="f-img-file" id="upload-label">
+                                        <span class="upload-icon">📁</span>
+                                        <span id="upload-filename">Klik untuk pilih foto</span>
+                                        <span class="upload-hint">JPG, PNG, WEBP — maks. 2 MB</span>
+                                    </label>
+                                    <input type="file" id="f-img-file" accept="image/*" onchange="handleImgFile(this)">
                                 </div>
 
                                 <!-- Emoji Placeholder -->
@@ -1342,7 +1374,7 @@
         const category = document.getElementById('f-category').value;
         const year     = document.getElementById('f-year').value.trim();
         const tagsRaw  = document.getElementById('f-tags').value.trim();
-        const imgUrl   = document.getElementById('f-img-url').value.trim();
+        const imgUrl   = window._pendingImgUrl || '';
         const imgEmoji = document.getElementById('f-img-emoji').value.trim();
         const featured = document.getElementById('f-featured').checked;
 
@@ -1366,7 +1398,9 @@
 
     function resetForm() {
         document.getElementById('add-form').reset();
+        window._pendingImgUrl = '';
         document.getElementById('img-preview').innerHTML = '🖼️';
+        document.getElementById('upload-filename').textContent = 'Klik untuk pilih foto';
         document.getElementById('cat-preview-container').innerHTML = '';
     }
 
@@ -1379,13 +1413,31 @@
         container.innerHTML = `<span class="cat-preview cat-${cat}">${labels[cat]}</span>`;
     }
 
+    /* ─── Image file upload ─── */
+    function handleImgFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+            showToast('⚠️ Ukuran foto melebihi 2 MB!', 'error');
+            input.value = '';
+            return;
+        }
+        document.getElementById('upload-filename').textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            window._pendingImgUrl = e.target.result;
+            updateImgPreview();
+        };
+        reader.readAsDataURL(file);
+    }
+
     /* ─── Image preview ─── */
     function updateImgPreview() {
-        const url   = document.getElementById('f-img-url').value.trim();
+        const url   = window._pendingImgUrl || '';
         const emoji = document.getElementById('f-img-emoji').value.trim();
         const box   = document.getElementById('img-preview');
         if (url) {
-            box.innerHTML = `<img src="${esc(url)}" alt="preview" onerror="this.parentElement.innerHTML='❌ Gambar tidak ditemukan'">`;
+            box.innerHTML = `<img src="${url}" alt="preview">`;
         } else if (emoji) { box.textContent = emoji; }
         else { box.textContent = '🖼️'; }
     }
