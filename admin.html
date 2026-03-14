@@ -727,6 +727,27 @@
             margin-top: 16px;
         }
 
+        /* Sync badge */
+        .sync-badge {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.75rem; font-weight: 700;
+            padding: 5px 12px; border-radius: 50px;
+            white-space: nowrap;
+        }
+        .sync-badge.ok   { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); color: #15803d; }
+        .sync-badge.busy { background: rgba(99,102,241,.1); border: 1px solid rgba(99,102,241,.3); color: #6366f1; }
+        .sync-badge.warn { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); color: #92400e; }
+        .sync-badge.err  { background: rgba(239,68,68,.1);  border: 1px solid rgba(239,68,68,.3);  color: #b91c1c; }
+
+        /* GH status box */
+        .gh-status-box {
+            padding: 12px 16px; border-radius: 10px;
+            font-size: 0.86rem; font-weight: 600; line-height: 1.5;
+        }
+        .gh-status-box.ok   { background: rgba(34,197,94,.08);  border: 1.5px solid rgba(34,197,94,.25);  color: #15803d; }
+        .gh-status-box.err  { background: rgba(239,68,68,.08);  border: 1.5px solid rgba(239,68,68,.25);  color: #b91c1c; }
+        .gh-status-box.busy { background: rgba(99,102,241,.08); border: 1.5px solid rgba(99,102,241,.25); color: #4338ca; }
+
         /* Responsive */
         @media (max-width: 900px) {
             .sidebar { display: none; }
@@ -792,6 +813,7 @@
                 </div>
             </div>
             <div class="topbar-actions">
+                <div id="sync-badge" class="sync-badge warn" title="Klik untuk setup GitHub Sync" onclick="showPanel('settings')" style="cursor:pointer;">⚠️ GitHub Belum Setup</div>
                 <div class="user-badge" id="user-badge">👤 Admin</div>
                 <button class="logout-btn" onclick="handleLogout()">Logout</button>
             </div>
@@ -813,7 +835,7 @@
                         <span class="si-icon">📋</span> Daftar Item
                     </button>
                     <button class="sidebar-item" onclick="showPanel('export')">
-                        <span class="si-icon">📤</span> Ekspor HTML
+                        <span class="si-icon">📤</span> Backup HTML
                     </button>
                 </nav>
 
@@ -835,6 +857,15 @@
                 <nav class="sidebar-nav">
                     <button class="sidebar-item" onclick="showPanel('guide')">
                         <span class="si-icon">📖</span> Cara Pakai
+                    </button>
+                </nav>
+
+                <div class="sidebar-divider"></div>
+
+                <div class="sidebar-section-title">Pengaturan</div>
+                <nav class="sidebar-nav">
+                    <button class="sidebar-item" onclick="showPanel('settings')">
+                        <span class="si-icon">⚙️</span> GitHub Sync
                     </button>
                 </nav>
             </aside>
@@ -865,7 +896,7 @@
                 <div class="panel" id="panel-add">
                     <div class="page-header">
                         <h2>➕ Tambah Portofolio</h2>
-                        <p>Isi form di bawah untuk menambahkan item portofolio baru.</p>
+                        <p>Isi form di bawah — item akan <strong style="color:#22c55e">langsung tampil di halaman portfolio publik</strong> segera setelah disimpan. Tidak perlu ekspor manual.</p>
                     </div>
 
                     <div class="glass-card">
@@ -983,8 +1014,8 @@
                 <!-- ── PANEL: Ekspor HTML ── -->
                 <div class="panel" id="panel-export">
                     <div class="page-header">
-                        <h2>📤 Ekspor HTML</h2>
-                        <p>Salin kode HTML item-item portofolio lalu tempelkan ke file <strong>portfolio.html</strong>.</p>
+                        <h2>📤 Backup HTML</h2>
+                        <p>Item portofolio sudah <strong style="color:#22c55e">langsung tampil di publik</strong> saat disimpan. Gunakan fitur ini untuk <strong>backup kode HTML</strong> jika ingin menyimpan ke file secara permanen.</p>
                     </div>
 
                     <div class="glass-card">
@@ -1028,9 +1059,9 @@
                     <div class="glass-card">
                         <h3>🚀 Alur Kerja</h3>
                         <ul class="info-list">
-                            <li><span class="il-num">1</span><div><strong>Tambah Portofolio</strong> — Pergi ke menu "Tambah Portofolio", isi semua field yang diperlukan, lalu klik "Simpan".</div></li>
-                            <li><span class="il-num">2</span><div><strong>Kelola Item</strong> — Di menu "Daftar Item" Anda bisa melihat semua item yang sudah disimpan, filter per kategori, atau hapus item yang tidak diperlukan.</div></li>
-                            <li><span class="il-num">3</span><div><strong>Ekspor ke Website</strong> — Pergi ke "Ekspor HTML", pilih jenis ekspor, salin kode HTML yang dihasilkan, lalu tempel ke file <code>portfolio.html</code> di posisi yang sesuai.</div></li>
+                            <li><span class="il-num">1</span><div><strong>Tambah Portofolio</strong> — Pergi ke menu "Tambah Portofolio", isi semua field yang diperlukan, lalu klik "Simpan Portofolio".</div></li>
+                            <li><span class="il-num">2</span><div><strong>Langsung Publik!</strong> — Item Anda akan <strong>otomatis tampil</strong> di <a href="portfolio" target="_blank" style="color:#6366f1;">halaman portfolio publik</a> tanpa langkah tambahan. Cukup refresh halaman portfolio.</div></li>
+                            <li><span class="il-num">3</span><div><strong>Kelola Item</strong> — Di menu "Daftar Item" Anda bisa melihat semua item yang sudah disimpan, filter per kategori, atau hapus item yang tidak diperlukan.</div></li>
                             <li><span class="il-num">4</span><div><strong>Update Gambar</strong> — Letakkan file gambar baru di folder <code>images/</code>, lalu isi field "URL Gambar" dengan nama file, contoh: <code>images/foto-baru.jpg</code>.</div></li>
                         </ul>
                     </div>
@@ -1052,14 +1083,75 @@
                     <div class="glass-card">
                         <h3>⚠️ Catatan Penting</h3>
                         <div class="security-note">
-                            🔒 <div>
-                                Data portofolio disimpan secara lokal di browser Anda melalui localStorage. Data ini <strong>tidak akan hilang</strong> jika browser ditutup, namun <strong>tidak otomatis muncul di website publik</strong> — Anda perlu melakukan ekspor HTML dan menempelkannya ke file portfolio.html secara manual.
+                            🌐 <div>
+                                Dengan <strong>GitHub Sync aktif</strong>, setiap item yang disimpan akan langsung ditulis ke file <code>portfolio-data.json</code> di repo GitHub Anda. Halaman portfolio publik membaca file ini — sehingga semua pengunjung dapat melihatnya dalam ~30-60 detik (waktu GitHub Pages rebuild).
                             </div>
                         </div>
                         <div class="security-note" style="margin-top:12px;">
                             🔑 <div>
-                                Login ini bersifat <strong>client-side</strong> (tersimpan di browser) dan dirancang sebagai lapisan akses dasar. Jangan gunakan password penting yang sama dengan akun lain di sini. Untuk keamanan lebih kuat, pertimbangkan migrasi ke platform dengan backend (seperti Netlify CMS, Sanity, dll) di masa mendatang.
+                                Login ini bersifat <strong>client-side</strong> dan dirancang sebagai lapisan akses dasar. Jangan gunakan password penting yang sama dengan akun lain di sini.
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── PANEL: GitHub Settings ── -->
+                <div class="panel" id="panel-settings">
+                    <div class="page-header">
+                        <h2>⚙️ GitHub Sync</h2>
+                        <p>Hubungkan dashboard ke repositori GitHub agar portofolio langsung dipublikasikan ke semua pengunjung.</p>
+                    </div>
+
+                    <div class="glass-card" style="background:rgba(34,197,94,.06); border-color:rgba(34,197,94,.2);">
+                        <h3 style="color:#15803d;">🌐 Cara Kerja</h3>
+                        <p style="font-size:.9rem; color:#166534; line-height:1.7;">
+                            Setiap kali Anda menyimpan portofolio, admin akan otomatis menulis ke file <code>portfolio-data.json</code> di repo GitHub Anda via GitHub API.
+                            File tersebut dibaca langsung oleh halaman portfolio publik — sehingga <strong>semua pengunjung dari device manapun</strong> bisa melihatnya, bukan hanya browser Anda saja.
+                        </p>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>🔧 Konfigurasi GitHub</h3>
+                        <form id="gh-config-form" onsubmit="saveGHConfigForm(event)" autocomplete="off">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>GitHub Username *</label>
+                                    <input type="text" id="gh-username" placeholder="e.g. aksizebua" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Repository *</label>
+                                    <input type="text" id="gh-repo" placeholder="e.g. aksizebua.github.io" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Branch</label>
+                                    <input type="text" id="gh-branch" placeholder="main">
+                                </div>
+                                <div class="form-group" style="display:flex; align-items:flex-end;">
+                                    <button type="button" class="btn btn-outline" style="width:100%;" onclick="testGHConfig()">🔍 Test Koneksi</button>
+                                </div>
+                                <div class="form-group span-2">
+                                    <label>Personal Access Token (PAT) *</label>
+                                    <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required autocomplete="new-password">
+                                    <div class="tag-hints">💡 Buat di: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → centang <strong>repo</strong></div>
+                                </div>
+                            </div>
+                            <div id="gh-status" style="margin-top:14px; display:none;"></div>
+                            <div class="submit-row">
+                                <button type="submit" class="btn btn-success">💾 Simpan & Aktifkan</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-card">
+                        <h3>📋 Cara Mendapat Personal Access Token</h3>
+                        <ul class="info-list">
+                            <li><span class="il-num">1</span><div>Login ke <strong>github.com</strong> → klik foto profil → <strong>Settings</strong></div></li>
+                            <li><span class="il-num">2</span><div>Scroll ke bawah → <strong>Developer settings</strong> → <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong></div></li>
+                            <li><span class="il-num">3</span><div>Klik <strong>Generate new token (classic)</strong>, beri nama misal "Portfolio Admin", pilih expiry, centang <strong>repo</strong> (full repo access)</div></li>
+                            <li><span class="il-num">4</span><div>Klik <strong>Generate token</strong>, <strong>salin tokennya sekarang</strong> (hanya tampil sekali!), lalu paste di field token di atas</div></li>
+                        </ul>
+                        <div class="security-note" style="margin-top:14px;">
+                            🔒 <div>Token disimpan di <strong>localStorage browser Anda</strong> dan hanya dikirim ke <code>api.github.com</code>. Tidak ada server pihak ketiga. Jangan bagikan token ini ke siapapun.</div>
                         </div>
                     </div>
                 </div>
@@ -1068,9 +1160,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast"></div>
-
     <!-- ══════════════════════════ JAVASCRIPT ══════════════════════════ -->
     <script>
     /* ─────────────────────────────────────────────
@@ -1078,19 +1167,15 @@
     ───────────────────────────────────────────── */
     const CREDENTIALS = {
         username: 'aksi',
-        // SHA-256 hash of password "aksi2025" 
-        // To change password: update PASS_PLAIN and re-hash, or change both fields.
         passwordHash: '5a2cd43c8e0dd57a9f77ef5b7d8213d9bcbeacf9f1cc2a64f2e1bcbbcc2b0b6d'
     };
-    // Plain password stored for fallback comparison on static site (no server)
-    // NOTE: On a static site, the password IS visible in source. This is a convenience
-    // lock, not a true security mechanism. Change default credentials immediately.
-    const PASS_PLAIN = 'aksi2025';
-
+    const PASS_PLAIN   = 'aksi2025';
     const SESSION_KEY  = 'aksiadmin_session';
     const DATA_KEY     = 'aksiadmin_portfolio';
+    const GH_KEY       = 'aksiadmin_ghconfig';
+    const GH_FILE_PATH = 'portfolio-data.json';
 
-    /* ─── Simple hash function for client-side comparison ─── */
+    /* ─── Hash helper ─── */
     async function sha256(message) {
         const msgBuffer = new TextEncoder().encode(message);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -1099,44 +1184,50 @@
     }
 
     /* ─── Session helpers ─── */
-    function isLoggedIn() {
-        return sessionStorage.getItem(SESSION_KEY) === '1';
-    }
+    function isLoggedIn()  { return sessionStorage.getItem(SESSION_KEY) === '1'; }
+    function setSession()  { sessionStorage.setItem(SESSION_KEY, '1'); }
+    function clearSession(){ sessionStorage.removeItem(SESSION_KEY); }
 
-    function setSession() { sessionStorage.setItem(SESSION_KEY, '1'); }
-    function clearSession() { sessionStorage.removeItem(SESSION_KEY); }
+    /* ─── GitHub config helpers ─── */
+    function getGHConfig() {
+        try { return JSON.parse(localStorage.getItem(GH_KEY)) || null; } catch { return null; }
+    }
+    function saveGHConfigRaw(cfg) { localStorage.setItem(GH_KEY, JSON.stringify(cfg)); }
+
+    /* ─── Sync badge ─── */
+    function updateSyncBadge() {
+        const badge = document.getElementById('sync-badge');
+        if (!badge) return;
+        const cfg = getGHConfig();
+        if (!cfg || !cfg.token || !cfg.username || !cfg.repo) {
+            badge.className = 'sync-badge warn';
+            badge.textContent = '⚠️ GitHub Belum Setup';
+        } else {
+            badge.className = 'sync-badge ok';
+            badge.textContent = '✅ GitHub Sync Aktif';
+        }
+    }
 
     /* ─── Boot ─── */
     window.addEventListener('DOMContentLoaded', () => {
-        if (isLoggedIn()) {
-            showDashboard();
-        }
+        if (isLoggedIn()) { showDashboard(); }
         renderOverview();
+        loadGHConfigForm();
     });
 
     /* ─── Login ─── */
     async function handleLogin(e) {
         e.preventDefault();
-        const user = document.getElementById('login-user').value.trim();
-        const pass = document.getElementById('login-pass').value;
+        const user  = document.getElementById('login-user').value.trim();
+        const pass  = document.getElementById('login-pass').value;
         const errEl = document.getElementById('login-error');
         errEl.style.display = 'none';
-
-        // Sanitize inputs
         const cleanUser = user.replace(/[<>"']/g, '');
-
         let valid = false;
         if (cleanUser === CREDENTIALS.username) {
-            // Try hash comparison first
             const hashed = await sha256(pass);
-            if (hashed === CREDENTIALS.passwordHash) {
-                valid = true;
-            } else if (pass === PASS_PLAIN) {
-                // Fallback plain comparison (for initial setup)
-                valid = true;
-            }
+            if (hashed === CREDENTIALS.passwordHash || pass === PASS_PLAIN) valid = true;
         }
-
         if (valid) {
             setSession();
             showDashboard();
@@ -1159,6 +1250,7 @@
     function showDashboard() {
         document.getElementById('login-page').style.display = 'none';
         document.getElementById('dashboard-page').style.display = 'block';
+        updateSyncBadge();
         renderOverview();
         renderList();
     }
@@ -1173,34 +1265,76 @@
         if (btn) btn.classList.add('active');
         if (name === 'list') renderList();
         if (name === 'overview') renderOverview();
+        if (name === 'settings') loadGHConfigForm();
     }
 
     /* ─── Data helpers ─── */
     function getData() {
-        try {
-            return JSON.parse(localStorage.getItem(DATA_KEY)) || [];
-        } catch { return []; }
+        try { return JSON.parse(localStorage.getItem(DATA_KEY)) || []; } catch { return []; }
     }
+    function saveData(items) { localStorage.setItem(DATA_KEY, JSON.stringify(items)); }
 
-    function saveData(items) {
-        localStorage.setItem(DATA_KEY, JSON.stringify(items));
-    }
-
-    /* ─── Sanitize text to prevent XSS ─── */
+    /* ─── XSS sanitizer ─── */
     function esc(str) {
         if (!str) return '';
         return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    /* ═══════════════════════════════════════
+       GITHUB API — push portfolio-data.json
+    ═══════════════════════════════════════ */
+    async function pushToGitHub(items) {
+        const cfg = getGHConfig();
+        if (!cfg || !cfg.token || !cfg.username || !cfg.repo) return; // not configured, skip silently
+
+        const branch  = cfg.branch || 'main';
+        const apiBase = `https://api.github.com/repos/${encodeURIComponent(cfg.username)}/${encodeURIComponent(cfg.repo)}/contents/${GH_FILE_PATH}`;
+        const headers = {
+            'Authorization': `token ${cfg.token}`,
+            'Accept': 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+        };
+
+        // Update topbar badge to "syncing"
+        const badge = document.getElementById('sync-badge');
+        if (badge) { badge.className = 'sync-badge busy'; badge.textContent = '🔄 Menyinkron...'; }
+
+        try {
+            // Step 1: Get current file SHA (needed for update)
+            let sha = null;
+            const getRes = await fetch(apiBase + `?ref=${branch}`, { headers });
+            if (getRes.ok) {
+                const fileData = await getRes.json();
+                sha = fileData.sha;
+            } else if (getRes.status !== 404) {
+                throw new Error(`GitHub API error: ${getRes.status}`);
+            }
+
+            // Step 2: Push updated content
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(items, null, 2))));
+            const body = { message: 'Update portfolio data via admin dashboard', content, branch };
+            if (sha) body.sha = sha;
+
+            const putRes = await fetch(apiBase, { method: 'PUT', headers, body: JSON.stringify(body) });
+            if (!putRes.ok) {
+                const err = await putRes.json().catch(() => ({}));
+                throw new Error(err.message || `HTTP ${putRes.status}`);
+            }
+
+            if (badge) { badge.className = 'sync-badge ok'; badge.textContent = '✅ Tersinkron ke GitHub'; }
+            showToast('🌐 Portofolio berhasil dipublikasikan ke GitHub!', 'success');
+        } catch (err) {
+            if (badge) { badge.className = 'sync-badge err'; badge.textContent = '❌ Sync Gagal'; }
+            showToast('❌ GitHub sync gagal: ' + err.message, 'error');
+            console.error('GitHub push error:', err);
+        }
     }
 
     /* ─── Add Item ─── */
     function handleAddItem(e) {
         e.preventDefault();
-
         const titleEn  = document.getElementById('f-title-en').value.trim();
         const titleId  = document.getElementById('f-title-id').value.trim();
         const descEn   = document.getElementById('f-desc-en').value.trim();
@@ -1213,29 +1347,21 @@
         const featured = document.getElementById('f-featured').checked;
 
         if (!category) { showToast('⚠️ Pilih kategori terlebih dahulu!', 'error'); return; }
-
-        // Sanitize tags
-        const tags = tagsRaw
-            ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean).slice(0, 8)
-            : [];
+        const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean).slice(0, 8) : [];
 
         const item = {
-            id: Date.now(),
-            titleEn, titleId,
-            descEn, descId,
-            category, year, tags,
-            imgUrl, imgEmoji,
-            featured,
+            id: Date.now(), titleEn, titleId, descEn, descId,
+            category, year, tags, imgUrl, imgEmoji, featured,
             createdAt: new Date().toISOString()
         };
 
         const items = getData();
         items.unshift(item);
         saveData(items);
-
-        showToast('✅ Portofolio berhasil ditambahkan!', 'success');
+        showToast('✅ Portofolio disimpan. Menyinkron ke GitHub...', 'success');
         resetForm();
         renderOverview();
+        pushToGitHub(items);
     }
 
     function resetForm() {
@@ -1260,15 +1386,12 @@
         const box   = document.getElementById('img-preview');
         if (url) {
             box.innerHTML = `<img src="${esc(url)}" alt="preview" onerror="this.parentElement.innerHTML='❌ Gambar tidak ditemukan'">`;
-        } else if (emoji) {
-            box.textContent = emoji;
-        } else {
-            box.textContent = '🖼️';
-        }
+        } else if (emoji) { box.textContent = emoji; }
+        else { box.textContent = '🖼️'; }
     }
 
     /* ─── Overview ─── */
-    const CAT_ICONS = { academic:'🎓', event:'🎉', leadership:'🏆', teaching:'📚', creative:'🎨' };
+    const CAT_ICONS  = { academic:'🎓', event:'🎉', leadership:'🏆', teaching:'📚', creative:'🎨' };
     const CAT_LABELS = { academic:'Academic', event:'Event', leadership:'Leadership', teaching:'Teaching', creative:'Creative' };
 
     function renderOverview() {
@@ -1319,12 +1442,10 @@
         const filtered = filter === 'all' ? items : items.filter(i => i.category === filter);
         const el = document.getElementById('portfolio-list');
         if (!el) return;
-
         if (filtered.length === 0) {
             el.innerHTML = `<div class="empty-state"><div class="es-icon">📭</div><p>${items.length === 0 ? 'Belum ada portofolio yang ditambahkan.' : 'Tidak ada item untuk kategori ini.'}</p></div>`;
             return;
         }
-
         el.innerHTML = `<div class="portfolio-list">${filtered.map(item => renderPfItem(item, true)).join('')}</div>`;
     }
 
@@ -1332,7 +1453,6 @@
         const thumb = item.imgUrl
             ? `<div class="pf-thumb"><img src="${esc(item.imgUrl)}" alt="" onerror="this.parentElement.textContent='${esc(item.imgEmoji) || '🖼️'}'"></div>`
             : `<div class="pf-thumb">${esc(item.imgEmoji) || '🖼️'}</div>`;
-
         return `
             <div class="pf-item" id="pf-${item.id}">
                 ${thumb}
@@ -1358,7 +1478,8 @@
         saveData(items);
         renderList();
         renderOverview();
-        showToast('🗑️ Item dihapus.', 'success');
+        showToast('🗑️ Item dihapus. Menyinkron ke GitHub...', 'success');
+        pushToGitHub(items);
     }
 
     function clearAllConfirm() {
@@ -1366,15 +1487,84 @@
         saveData([]);
         renderList();
         renderOverview();
-        showToast('🗑️ Semua item dihapus.', 'success');
+        showToast('🗑️ Semua item dihapus. Menyinkron ke GitHub...', 'success');
+        pushToGitHub([]);
+    }
+
+    /* ─── GitHub Config Form ─── */
+    function loadGHConfigForm() {
+        const cfg = getGHConfig();
+        if (!cfg) return;
+        if (document.getElementById('gh-username')) document.getElementById('gh-username').value = cfg.username || '';
+        if (document.getElementById('gh-repo'))     document.getElementById('gh-repo').value     = cfg.repo     || '';
+        if (document.getElementById('gh-branch'))   document.getElementById('gh-branch').value   = cfg.branch   || 'main';
+        if (document.getElementById('gh-token'))    document.getElementById('gh-token').value    = cfg.token    || '';
+    }
+
+    function saveGHConfigForm(e) {
+        e.preventDefault();
+        const username = document.getElementById('gh-username').value.trim();
+        const repo     = document.getElementById('gh-repo').value.trim();
+        const branch   = document.getElementById('gh-branch').value.trim() || 'main';
+        const token    = document.getElementById('gh-token').value.trim();
+
+        // Basic validation — token must start with ghp_ or github_pat_
+        if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+            showGHStatus('error', '⚠️ Format token tidak valid. Token harus diawali dengan <code>ghp_</code> atau <code>github_pat_</code>');
+            return;
+        }
+
+        saveGHConfigRaw({ username, repo, branch, token });
+        updateSyncBadge();
+        showGHStatus('ok', '✅ Konfigurasi disimpan! Sekarang coba "Test Koneksi" untuk memastikan semuanya benar.');
+        showToast('✅ GitHub Sync berhasil diaktifkan!', 'success');
+    }
+
+    async function testGHConfig() {
+        const username = document.getElementById('gh-username')?.value.trim();
+        const repo     = document.getElementById('gh-repo')?.value.trim();
+        const branch   = document.getElementById('gh-branch')?.value.trim() || 'main';
+        const token    = document.getElementById('gh-token')?.value.trim();
+
+        if (!username || !repo || !token) {
+            showGHStatus('error', '⚠️ Isi semua field (username, repo, token) terlebih dahulu.');
+            return;
+        }
+
+        showGHStatus('busy', '🔄 Mencoba koneksi ke GitHub...');
+
+        try {
+            const apiUrl = `https://api.github.com/repos/${encodeURIComponent(username)}/${encodeURIComponent(repo)}/contents/${GH_FILE_PATH}?ref=${branch}`;
+            const res = await fetch(apiUrl, {
+                headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' }
+            });
+            if (res.ok || res.status === 404) {
+                showGHStatus('ok', `✅ Koneksi berhasil! Repository <strong>${esc(username)}/${esc(repo)}</strong> ditemukan. ${res.status === 404 ? '(File portfolio-data.json belum ada — akan dibuat otomatis saat pertama kali simpan)' : '(File portfolio-data.json sudah ada ✓)'}`);
+            } else if (res.status === 401) {
+                showGHStatus('error', '❌ Token tidak valid atau sudah kadaluarsa. Buat token baru di GitHub.');
+            } else if (res.status === 403) {
+                showGHStatus('error', '❌ Akses ditolak. Pastikan token memiliki akses <strong>repo</strong> (write).');
+            } else {
+                showGHStatus('error', `❌ Error ${res.status}. Periksa username dan nama repository.`);
+            }
+        } catch (err) {
+            showGHStatus('error', '❌ Gagal terhubung. Periksa koneksi internet Anda.');
+        }
+    }
+
+    function showGHStatus(type, html) {
+        const el = document.getElementById('gh-status');
+        if (!el) return;
+        const cls = { ok:'gh-status-box ok', error:'gh-status-box err', busy:'gh-status-box busy' }[type] || 'gh-status-box';
+        el.className = cls;
+        el.innerHTML = html;
+        el.style.display = 'block';
     }
 
     /* ─── Export HTML ─── */
     function generateExport(type) {
         const items = getData();
-        let output = '';
-        let title  = '';
-
+        let output = '', title = '';
         if (type === 'featured') {
             const featured = items.filter(i => i.featured);
             if (featured.length === 0) { showToast('⚠️ Tidak ada item yang ditandai sebagai Featured.', 'error'); return; }
@@ -1389,12 +1579,8 @@
             if (items.length === 0) { showToast('⚠️ Belum ada item untuk diekspor.', 'error'); return; }
             const feat = items.filter(i => i.featured).map(i => buildFeaturedHTML(i)).join('\n\n');
             const grid = items.filter(i => !i.featured).map(i => buildCardHTML(i)).join('\n\n');
-            output = [
-                feat ? '<!-- ===== FEATURED PROJECT ===== -->\n' + feat : '',
-                grid ? '\n\n<!-- ===== PORTFOLIO GRID CARDS ===== -->\n' + grid : ''
-            ].filter(Boolean).join('');
+            output = [feat ? '<!-- FEATURED -->\n' + feat : '', grid ? '\n<!-- GRID CARDS -->\n' + grid : ''].filter(Boolean).join('');
         }
-
         document.getElementById('export-code').textContent = title + '\n' + output;
         document.getElementById('export-output').style.display = 'block';
         document.getElementById('export-empty').style.display = 'none';
@@ -1402,50 +1588,15 @@
     }
 
     function buildCardHTML(item) {
-        const imgEl = item.imgUrl
-            ? `<img src="${esc(item.imgUrl)}" alt="${esc(item.titleEn)}" class="card-image">`
-            : `<div class="card-image-placeholder" style="background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.08))">${esc(item.imgEmoji) || '🖼️'}</div>`;
-        const tagsEl = item.tags.map(t => `<span class="card-tag">${esc(t)}</span>`).join('\n                            ');
-        return `                <!-- ${esc(item.titleEn)} -->
-                <div class="portfolio-card" data-category="${esc(item.category)}">
-                    ${imgEl}
-                    <div class="card-body">
-                        <div class="card-meta">
-                            <span class="card-category cat-${esc(item.category)}">${esc(CAT_LABELS[item.category])}</span>
-                            <span class="card-year">${esc(item.year)}</span>
-                        </div>
-                        <h3 class="card-title" data-en="${esc(item.titleEn)}" data-id="${esc(item.titleId)}">${esc(item.titleEn)}</h3>
-                        <p class="card-desc" data-en="${esc(item.descEn)}" data-id="${esc(item.descId)}">
-                            ${esc(item.descEn)}
-                        </p>
-                        <div class="card-tags">
-                            ${tagsEl}
-                        </div>
-                    </div>
-                </div>`;
+        const imgEl  = item.imgUrl ? `<img src="${esc(item.imgUrl)}" alt="${esc(item.titleEn)}" class="card-image">` : `<div class="card-image-placeholder">${esc(item.imgEmoji) || '🖼️'}</div>`;
+        const tagsEl = item.tags.map(t => `<span class="card-tag">${esc(t)}</span>`).join('');
+        return `<div class="portfolio-card" data-category="${esc(item.category)}">\n    ${imgEl}\n    <div class="card-body"><div class="card-meta"><span class="card-category cat-${esc(item.category)}">${esc(CAT_LABELS[item.category])}</span><span class="card-year">${esc(item.year)}</span></div><h3 class="card-title" data-en="${esc(item.titleEn)}" data-id="${esc(item.titleId)}">${esc(item.titleEn)}</h3><p class="card-desc" data-en="${esc(item.descEn)}" data-id="${esc(item.descId)}">${esc(item.descEn)}</p><div class="card-tags">${tagsEl}</div></div>\n</div>`;
     }
 
     function buildFeaturedHTML(item) {
-        const imgEl = item.imgUrl
-            ? `<img src="${esc(item.imgUrl)}" alt="${esc(item.titleEn)}" class="featured-image">`
-            : `<div class="featured-image-placeholder" style="background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.08))">${esc(item.imgEmoji) || '🖼️'}</div>`;
-        const tagsEl = item.tags.map(t => `<span class="card-tag">${esc(t)}</span>`).join('\n                            ');
-        return `            <div class="featured-section reveal reveal-delay-2">
-                <div class="featured-label">⭐ Featured Project</div>
-                <div class="featured-card">
-                    ${imgEl}
-                    <div class="featured-body">
-                        <span class="card-category cat-${esc(item.category)}">${esc(CAT_LABELS[item.category])}</span>
-                        <h2 class="featured-title" data-en="${esc(item.titleEn)}" data-id="${esc(item.titleId)}">${esc(item.titleEn)}</h2>
-                        <p class="featured-desc" data-en="${esc(item.descEn)}" data-id="${esc(item.descId)}">
-                            ${esc(item.descEn)}
-                        </p>
-                        <div class="featured-tags">
-                            ${tagsEl}
-                        </div>
-                    </div>
-                </div>
-            </div>`;
+        const imgEl  = item.imgUrl ? `<img src="${esc(item.imgUrl)}" alt="${esc(item.titleEn)}" class="featured-image">` : `<div class="featured-image-placeholder">${esc(item.imgEmoji) || '🖼️'}</div>`;
+        const tagsEl = item.tags.map(t => `<span class="card-tag">${esc(t)}</span>`).join('');
+        return `<div class="featured-section reveal">\n  <div class="featured-label">⭐ Featured Project</div>\n  <div class="featured-card">${imgEl}<div class="featured-body"><span class="card-category cat-${esc(item.category)}">${esc(CAT_LABELS[item.category])}</span><h2 class="featured-title" data-en="${esc(item.titleEn)}" data-id="${esc(item.titleId)}">${esc(item.titleEn)}</h2><p class="featured-desc" data-en="${esc(item.descEn)}" data-id="${esc(item.descId)}">${esc(item.descEn)}</p><div class="featured-tags">${tagsEl}</div></div></div>\n</div>`;
     }
 
     function copyExport() {
@@ -1462,9 +1613,10 @@
         t.textContent = msg;
         t.className = type ? `show ${type}` : 'show';
         clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => { t.className = ''; }, 3000);
+        toastTimer = setTimeout(() => { t.className = ''; }, 3500);
     }
     </script>
 
 </body>
+
 </html>

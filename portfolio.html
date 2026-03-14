@@ -967,9 +967,88 @@
     </section>
 
     <script>
+        // ===== LOAD ITEMS FROM portfolio-data.json (PUBLIC — visible to all visitors) =====
+        (function loadPublicPortfolio() {
+            var CAT_LABELS = { academic:'Academic', event:'Event', leadership:'Leadership', teaching:'Teaching', creative:'Creative' };
+
+            function esc(str) {
+                if (!str) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            }
+
+            function injectItems(items) {
+                if (!items || !items.length) return;
+                var grid = document.querySelector('.portfolio-grid');
+                var featuredAnchor = document.querySelector('.featured-section');
+
+                items.filter(function(i){ return !i.featured; }).forEach(function(item) {
+                    var imgEl = item.imgUrl
+                        ? '<img src="' + esc(item.imgUrl) + '" alt="' + esc(item.titleEn) + '" class="card-image">'
+                        : '<div class="card-image-placeholder" style="background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(168,85,247,.08))">' + (esc(item.imgEmoji) || '🖼️') + '</div>';
+                    var tagsEl = (item.tags || []).map(function(t){ return '<span class="card-tag">' + esc(t) + '</span>'; }).join('');
+                    var card = document.createElement('div');
+                    card.className = 'portfolio-card';
+                    card.setAttribute('data-category', item.category);
+                    card.setAttribute('data-admin-id', item.id);
+                    card.innerHTML = imgEl
+                        + '<div class="card-body">'
+                        + '<div class="card-meta">'
+                        + '<span class="card-category cat-' + esc(item.category) + '">' + esc(CAT_LABELS[item.category] || item.category) + '</span>'
+                        + '<span class="card-year">' + esc(item.year) + '</span>'
+                        + '</div>'
+                        + '<h3 class="card-title" data-en="' + esc(item.titleEn) + '" data-id="' + esc(item.titleId) + '">' + esc(item.titleEn) + '</h3>'
+                        + '<p class="card-desc" data-en="' + esc(item.descEn) + '" data-id="' + esc(item.descId) + '">' + esc(item.descEn) + '</p>'
+                        + '<div class="card-tags">' + tagsEl + '</div>'
+                        + '</div>';
+                    if (grid) grid.insertBefore(card, grid.firstChild);
+                });
+
+                items.filter(function(i){ return i.featured; }).reverse().forEach(function(item) {
+                    var imgEl = item.imgUrl
+                        ? '<img src="' + esc(item.imgUrl) + '" alt="' + esc(item.titleEn) + '" class="featured-image">'
+                        : '<div class="featured-image-placeholder" style="background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(168,85,247,.08))">' + (esc(item.imgEmoji) || '🖼️') + '</div>';
+                    var tagsEl = (item.tags || []).map(function(t){ return '<span class="card-tag">' + esc(t) + '</span>'; }).join('');
+                    var section = document.createElement('div');
+                    section.className = 'featured-section reveal reveal-delay-2';
+                    section.innerHTML =
+                        '<div class="featured-label" data-en="⭐ Featured Project" data-id="⭐ Proyek Unggulan">⭐ Featured Project</div>'
+                        + '<div class="featured-card">'
+                        + imgEl
+                        + '<div class="featured-body">'
+                        + '<span class="card-category cat-' + esc(item.category) + '">' + esc(CAT_LABELS[item.category] || item.category) + '</span>'
+                        + '<h2 class="featured-title" data-en="' + esc(item.titleEn) + '" data-id="' + esc(item.titleId) + '">' + esc(item.titleEn) + '</h2>'
+                        + '<p class="featured-desc" data-en="' + esc(item.descEn) + '" data-id="' + esc(item.descId) + '">' + esc(item.descEn) + '</p>'
+                        + '<div class="featured-tags">' + tagsEl + '</div>'
+                        + '</div></div>';
+                    if (featuredAnchor) featuredAnchor.parentNode.insertBefore(section, featuredAnchor.nextSibling);
+                });
+            }
+
+            // 1. Fetch portfolio-data.json (deployed file — visible to ALL public visitors)
+            fetch('portfolio-data.json?_=' + Date.now())
+                .then(function(r){ return r.ok ? r.json() : []; })
+                .then(function(deployedItems) {
+                    // 2. Also load any NEW localStorage items not yet synced to GitHub
+                    var localItems = [];
+                    try { localItems = JSON.parse(localStorage.getItem('aksiadmin_portfolio')) || []; } catch(e) {}
+                    var deployedIds = new Set(deployedItems.map(function(i){ return i.id; }));
+                    var pendingItems = localItems.filter(function(i){ return !deployedIds.has(i.id); });
+                    // Inject deployed first, then pending (local-only, not yet pushed)
+                    injectItems(deployedItems);
+                    injectItems(pendingItems);
+                })
+                .catch(function() {
+                    // Fallback to localStorage only (e.g. local file:// dev)
+                    var items = [];
+                    try { items = JSON.parse(localStorage.getItem('aksiadmin_portfolio')) || []; } catch(e) {}
+                    injectItems(items);
+                });
+        })();
+
         // ===== FILTER LOGIC =====
         const filterBtns = document.querySelectorAll('.filter-btn');
-        const cards = document.querySelectorAll('.portfolio-card');
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -978,7 +1057,8 @@
 
                 const filter = btn.getAttribute('data-filter');
 
-                cards.forEach(card => {
+                // Re-query setiap klik agar item dari admin ikut terfilter
+                document.querySelectorAll('.portfolio-card').forEach(card => {
                     if (filter === 'all' || card.getAttribute('data-category') === filter) {
                         card.classList.remove('hidden');
                         card.style.animation = 'none';
